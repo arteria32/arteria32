@@ -91,7 +91,7 @@ def parse_arguments():
         SCENARIO_PRESET_KITCHEN_OVEN, SCENARIO_2_BOX_45D, SCENARIO_2_1_BOX_45DF, SCENARIO_2_2_BOX_0D, SCENARIO_2_3_BOX_90D
     ], help="Hands grasp position scenario to run.")
 
-    parser.add_argument("--box_name", type=str, default=OPEN_BOX, choices=[
+    parser.add_argument("--box_name", type=str, default=R307, choices=[
         REAL_BOX, WHITE_BOX, OPEN_BOX, R307
     ], help="Box to use in the scenario.")
 
@@ -138,50 +138,24 @@ if __name__ == "__main__":
         import rclpy
         rclpy.init()
 
-    # recording_mode = False
-    recording_mode = True
     # movement_mode_robot_joints = POSITIONAL_JOINT_CONTROL
     movement_mode_robot_joints = IMPEDANCE_ACTUATOR_CONTROL
     # movement_mode_robot_joints = INVERSE_DYNAMICS_ACTUATOR_CONTROL
 
     launch_options = LaunchOptions(
-        # scenario_name=args.scenario_name,
-        scenario_name=SCENARIO_PRESET_KITCHEN_OVEN,
-        # scenario_name=SCENARIO_2_2_BOX_0D,
-        # scenario_name=SCENARIO_2_BOX_45D,
-        # scenario_name=SCENARIO_2_1_BOX_45DF,
-        # scenario_name=SCENARIO_2_3_BOX_90D,
-        # box_name=args.box_name,
-        # box_name=OPEN_BOX,
-        # box_name=REAL_BOX,
-        # box_name=WHITE_BOX,
-        box_name=R307,
+        scenario_name=args.scenario_name,
+        box_name=args.box_name,
         joint_control=movement_mode_robot_joints,
-        # joint_control=POSITIONAL_JOINT_CONTROL,
-        # active_camera_controller=args.active_camera_controller,
-        active_camera_controller=True,
-        # render_video=args.render_video,
-        render_video=recording_mode,
+        active_camera_controller=args.active_camera_controller,
+        render_video=args.render_video,
         headless_mode=args.headless_mode,
-        # headless_mode=recording_mode,
         finish_scenario=args.finish_scenario,
-        # finish_scenario=recording_mode,
         collect_data=args.collect_data,
-        # collect_data=False,
-        # camera_scenario=args.camera_scenario,
-        camera_scenario=THIRD_PERSON_POV,
-        # camera_scenario=LEFT_HAND_POV,
-        # camera_scenario=RIGHT_HAND_POV,
-        # camera_scenario=FIRST_PERSON_POV,
+        camera_scenario=args.camera_scenario,
         robot_drive_scenario=args.robot_drive_scenario,
-        # robot_drive_scenario=ROTATE_RIGHT_AND_SIDE_DRIVE_SCENARIO,
-        # robot_drive_scenario=ROTATE_LEFT_AND_FORWARD_DRIVE_SCENARIO,
         video_speed=args.video_speed,
-        # video_speed=1.0,
         video_framerate=args.video_framerate,
-        # video_framerate=60,
         video_partition_by=args.video_partition_by,
-        # video_partition_by=None,
         publish_ros2=ros2_enabled,
     )
 

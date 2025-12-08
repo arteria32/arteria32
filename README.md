@@ -87,11 +87,17 @@ workspace/
 # Basic run (simulation only, no ROS2)
 python main.py
 
-# Enable ROS2 publishing
+# Enable ROS2 publishing (interactive mode)
 python main.py --publish_ros2
 
-# With other arguments
-python main.py --publish_ros2 --headless_mode --collect_data
+# ROS2 mode with headless rendering (typical for data collection)
+python main.py --publish_ros2 --headless_mode --render_video
+
+# ROS2 mode that auto-finishes the scenario
+python main.py --publish_ros2 --headless_mode --finish_scenario
+
+# Full ROS2 data collection setup
+python main.py --publish_ros2 --headless_mode --render_video --finish_scenario --collect_data
 
 # Explicitly disable ROS2 (default)
 python main.py --no_publish_ros2
@@ -100,6 +106,16 @@ python main.py --no_publish_ros2
 ros2 topic list
 ros2 topic echo /hdas/feedback_arm_left
 ```
+
+### Key Flags for ROS2 Mode
+
+| Flag | Description |
+|------|-------------|
+| `--publish_ros2` | Enable ROS2 data publishing |
+| `--headless_mode` | Run without GUI (for servers/containers) |
+| `--render_video` | Enable video rendering (needed for camera publishing) |
+| `--finish_scenario` | Auto-finish scenario when complete |
+| `--collect_data` | Enable data collection |
 
 ## Configuration
 
