@@ -84,20 +84,14 @@ workspace/
 ## Usage
 
 ```bash
-# Basic run (simulation only, no ROS2)
+# Basic run (simulation only, no ROS2, with GUI)
 python main.py
 
-# Enable ROS2 publishing (interactive mode)
+# Enable ROS2 publishing (automatically enables headless_mode, render_video, finish_scenario)
 python main.py --publish_ros2
 
-# ROS2 mode with headless rendering (typical for data collection)
-python main.py --publish_ros2 --headless_mode --render_video
-
-# ROS2 mode that auto-finishes the scenario
-python main.py --publish_ros2 --headless_mode --finish_scenario
-
-# Full ROS2 data collection setup
-python main.py --publish_ros2 --headless_mode --render_video --finish_scenario --collect_data
+# ROS2 mode with data collection
+python main.py --publish_ros2 --collect_data
 
 # Explicitly disable ROS2 (default)
 python main.py --no_publish_ros2
@@ -107,15 +101,24 @@ ros2 topic list
 ros2 topic echo /hdas/feedback_arm_left
 ```
 
-### Key Flags for ROS2 Mode
+### ROS2 Mode Auto-Enabled Flags
 
-| Flag | Description |
-|------|-------------|
-| `--publish_ros2` | Enable ROS2 data publishing |
-| `--headless_mode` | Run without GUI (for servers/containers) |
-| `--render_video` | Enable video rendering (needed for camera publishing) |
-| `--finish_scenario` | Auto-finish scenario when complete |
-| `--collect_data` | Enable data collection |
+When `--publish_ros2` is set, the following flags are **automatically enabled**:
+
+| Flag | Auto-set to | Reason |
+|------|-------------|--------|
+| `--headless_mode` | `True` | Run without GUI (for servers/containers) |
+| `--render_video` | `True` | Required for camera image publishing |
+| `--finish_scenario` | `True` | Auto-finish scenario when complete |
+
+### Additional Flags
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--collect_data` | `False` | Enable data collection (not auto-enabled) |
+| `--scenario_name` | `kitchen_oven` | Scenario to run |
+| `--box_name` | `r307` | Box to use |
+| `--camera_scenario` | `third_person` | Camera POV |
 
 ## Configuration
 

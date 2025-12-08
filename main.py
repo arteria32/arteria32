@@ -134,7 +134,13 @@ if __name__ == "__main__":
 
     # === Initialize ROS2 only if publishing is enabled ===
     ros2_enabled = args.publish_ros2
+    
+    # When ROS2 is enabled, automatically enable required flags
     if ros2_enabled:
+        args.render_video = True
+        args.finish_scenario = True
+        args.headless_mode = True
+        
         import rclpy
         rclpy.init()
 
