@@ -1,40 +1,115 @@
-<h1 align="center">
-Hello, I'm Denis Ryabko
-	<a href="https://github.com/Bouaskaoun" target="_self">
-		<img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="30">
-	</a>
-</h1>
+# MuJoCo ROS2 Bridge Integration
 
-<hr>
+This project integrates a MuJoCo simulation with ROS2 for publishing sensor data.
 
-<pre>
-💻 I am mainly a Frontend Developer
-📚 I have a Bachelors in Gas Reservoir Engineering from the Gubkin University
-📝 I have a strong interest in Frontend and geomechanical modeling 
-🛠️ Currently working on a Gazprom Neft
-🌟 Main language: JavaScript
-🚩 Interested in learning more about Microfrontend Architectures.
-😃 I look forward to collaborate on impactful projects
-</pre>
-<hr>
+## Architecture Overview
 
-## 🤝 Connect with me
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         main.py                                  │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │  1. rclpy.init()  ← Initialize ROS2 first                   ││
+│  │  2. Dependencies()  ← Creates launcher & ROS2 bridge        ││
+│  │  3. launcher.start()  ← Runs simulation loop                ││
+│  │  4. rclpy.shutdown()  ← Cleanup on exit                     ││
+│  └─────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    Simulation Loop (launcher)                    │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │  for each timestep:                                         ││
+│  │    mujoco.mj_step(model, data)                              ││
+│  │    step(time, dt)  ← Your step function                     ││
+│  └─────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                       step() function                            │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │  1. Update all controllers                                  ││
+│  │  2. mujoco_ROS2_bridge.step(time)  ← Publish if due         ││
+│  │  3. rclpy.spin_once(node, timeout_sec=0)  ← Process ROS2    ││
+│  └─────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────┘
+```
 
-<p align="center">
- <a href="www.linkedin.com/in/denis-ryabko-a02543298">
-    <img src="https://img.shields.io/badge/LinkedIn-blue?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Badge"/>
-  </a>
-</p>
+## Key Design Decisions
 
-## 💻 My Tech Stack
+### Why `spin_once()` instead of `spin()`?
 
-<div align="center">
-  <img src="https://github.com/devicons/devicon/blob/master/icons/react/react-original-wordmark.svg" title="React" alt="React" width="40" height="40"/>&nbsp;
-    <img src="https://github.com/devicons/devicon/blob/master/icons/redux/redux-original.svg" title="Redux" alt="Redux " width="40" height="40"/>&nbsp;
-  <img src="https://github.com/devicons/devicon/blob/master/icons/angular/angular-original.svg" title="Angular" alt="Angular" width="40" height="40"/>&nbsp;
-  <img src="https://github.com/devicons/devicon/blob/master/icons/materialui/materialui-original.svg" title="Material UI" alt="Material UI" width="40" height="40"/>&nbsp;
-  <img src="https://github.com/devicons/devicon/blob/master/icons/nodejs/nodejs-original-wordmark.svg" title="NodeJS" alt="NodeJS" width="40" height="40"/>&nbsp;
-   <img src="https://github.com/devicons/devicon/blob/master/icons/go/go-original.svg" title="Golang" alt="Golang" width="40" height="40"/>&nbsp;
-   <img src="https://github.com/devicons/devicon/blob/master/icons/python/python-original.svg" title="Python" alt="Python" width="40" height="40"/>&nbsp;
-  <img src="https://github.com/devicons/devicon/blob/master/icons/git/git-original-wordmark.svg" title="Git" **alt="Git" width="40" height="40"/>
-</div>
+| Aspect | `spin_once()` | `spin()` in thread |
+|--------|---------------|-------------------|
+| Thread safety | ✅ Single-threaded, safe | ⚠️ Requires locks for MjModel/MjData |
+| Complexity | Simple | More complex |
+| Timing control | Simulation controls timing | ROS2 controls timing |
+| Debugging | Easy | Harder (multi-threaded) |
+
+Since the MuJoCo `launcher` and `mujoco_ROS2_bridge` share the same `MjModel` and `MjData`, using `spin_once()` in the simulation loop is **safer and simpler**.
+
+### Why not use ROS2 timers?
+
+The `MujocoROS2Bridge` does NOT use `self.create_timer()` because:
+1. The simulation loop already controls timing
+2. Timer callbacks would only fire during `spin_once()` anyway
+3. Manual rate control in `bridge.step(sim_time)` is more predictable
+
+## File Structure
+
+```
+workspace/
+├── main.py                          # Entry point with ROS2 init/shutdown
+└── grasp_box/
+    ├── __init__.py
+    ├── launch_options.py            # Configuration constants
+    ├── dependencies.py              # Creates all components
+    ├── mujoco_ros2_bridge.py        # ROS2 node for publishing data
+    └── scenario.py                  # Scenario setup
+```
+
+## ROS2 Topics Published
+
+| Topic | Type | Description |
+|-------|------|-------------|
+| `/hdas/camera_wrist_left/color/image_raw/compressed` | `CompressedImage` | Left wrist camera |
+| `/hdas/camera_wrist_right/color/image_raw/compressed` | `CompressedImage` | Right wrist camera |
+| `/hdas/camera_head/left_raw/image_raw_color/compressed` | `CompressedImage` | Head camera |
+| `/hdas/feedback_arm_left` | `JointState` | Left arm joint state |
+| `/hdas/feedback_arm_right` | `JointState` | Right arm joint state |
+| `/hdas/feedback_gripper_left` | `JointState` | Left gripper state |
+| `/hdas/feedback_gripper_right` | `JointState` | Right gripper state |
+
+## Usage
+
+```bash
+# Basic run
+python main.py
+
+# With arguments
+python main.py --headless_mode --collect_data
+
+# Check ROS2 topics
+ros2 topic list
+ros2 topic echo /hdas/feedback_arm_left
+```
+
+## Configuration
+
+Adjust publishing rate in `dependencies.py`:
+
+```python
+return MujocoROS2Bridge(
+    ...
+    publish_rate=30.0,  # Hz - adjust as needed
+    ...
+)
+```
+
+## Thread Safety Notes
+
+- **Safe**: Reading `model` and `data` during `step()` (same thread as `mj_step`)
+- **Safe**: Publishing ROS2 messages from `step()` 
+- **Safe**: `spin_once()` with `timeout_sec=0` (non-blocking)
+- **NOT safe**: Accessing `model`/`data` from a separate ROS2 thread (don't do this)
