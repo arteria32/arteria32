@@ -256,6 +256,62 @@ class MujocoROS2Bridge(Node):
         """Get the latest gripper right control command."""
         return self._gripper_right_cmd
     
+    def get_arm_control(self, arm_name: str) -> Optional[dict[str, np.ndarray]]:
+        """Get arm control command as a dict mapping joint names to positions.
+        
+        Args:
+            arm_name: "left" or "right"
+            
+        Returns:
+            Dict of {joint_name: position} or None if no command received
+        """
+        if arm_name == "left":
+            cmd = self._arm_left_cmd
+            joint_names = self.arm_left_joint_names
+        elif arm_name == "right":
+            cmd = self._arm_right_cmd
+            joint_names = self.arm_right_joint_names
+        else:
+            self.get_logger().warn(f'Invalid arm_name: {arm_name}. Use "left" or "right".')
+            return None
+        
+        if cmd is None:
+            return None
+        
+        if len(cmd.position) != len(joint_names):
+            self.get_logger().warn(
+                f'Position count mismatch for {arm_name}: got {len(cmd.position)}, expected {len(joint_names)}'
+            )
+            return None
+        
+        return {joint_name: np.array(cmd.position[i]) for i, joint_name in enumerate(joint_names)}
+    
+    def get_gripper_control(self, gripper_name: str) -> Optional[dict[str, np.ndarray]]:
+        """Get gripper control command as a dict mapping joint names to positions.
+        
+        Args:
+            gripper_name: "left" or "right"
+            
+        Returns:
+            Dict of {joint_name: position_mm} or None if no command received
+        """
+        if gripper_name == "left":
+            cmd = self._gripper_left_cmd
+            joint_names = self.gripper_left_joint_names
+        elif gripper_name == "right":
+            cmd = self._gripper_right_cmd
+            joint_names = self.gripper_right_joint_names
+        else:
+            self.get_logger().warn(f'Invalid gripper_name: {gripper_name}. Use "left" or "right".')
+            return None
+        
+        if cmd is None or not cmd.position:
+            return None
+        
+        # Gripper has single position value (0-100mm)
+        pos_mm = cmd.position[0]
+        return {joint_name: np.array(pos_mm) for joint_name in joint_names}
+    
     def has_pending_commands(self) -> bool:
         """Check if there are any pending control commands."""
         return any([
