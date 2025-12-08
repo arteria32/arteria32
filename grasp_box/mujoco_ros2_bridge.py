@@ -68,15 +68,37 @@ class MujocoROS2Bridge(Node):
             JointState, '/hdas/feedback_gripper_right', 10)
 
         joint_names = joint_names or {}
-        self.arm_left_joint_names = joint_names.get('arm_left', [])
-        self.arm_right_joint_names = joint_names.get('arm_right', [])
-        self.gripper_left_joint_names = joint_names.get('gripper_left', [])
-        self.gripper_right_joint_names = joint_names.get('gripper_right', [])
+        self.arm_left_joint_names = joint_names.get('arm_left') or []
+        self.arm_right_joint_names = joint_names.get('arm_right') or []
+        self.gripper_left_joint_names = joint_names.get('gripper_left') or []
+        self.gripper_right_joint_names = joint_names.get('gripper_right') or []
+        
+        # Log joint configuration
+        self.get_logger().info(f'arm_left joints configured: {self.arm_left_joint_names}')
+        self.get_logger().info(f'arm_right joints configured: {self.arm_right_joint_names}')
+        self.get_logger().info(f'gripper_left joints configured: {self.gripper_left_joint_names}')
+        self.get_logger().info(f'gripper_right joints configured: {self.gripper_right_joint_names}')
         
         self.arm_left_joint_ids = self._get_joint_ids(self.arm_left_joint_names)
         self.arm_right_joint_ids = self._get_joint_ids(self.arm_right_joint_names)
         self.gripper_left_joint_ids = self._get_joint_ids(self.gripper_left_joint_names)
         self.gripper_right_joint_ids = self._get_joint_ids(self.gripper_right_joint_names)
+        
+        # Log resolved joint IDs
+        self.get_logger().info(f'arm_left joint IDs resolved: {self.arm_left_joint_ids}')
+        self.get_logger().info(f'arm_right joint IDs resolved: {self.arm_right_joint_ids}')
+        self.get_logger().info(f'gripper_left joint IDs resolved: {self.gripper_left_joint_ids}')
+        self.get_logger().info(f'gripper_right joint IDs resolved: {self.gripper_right_joint_ids}')
+        
+        # Warn if any joint group has no resolved IDs
+        if not self.arm_left_joint_ids:
+            self.get_logger().warn('No joint IDs found for arm_left - topic will not publish!')
+        if not self.arm_right_joint_ids:
+            self.get_logger().warn('No joint IDs found for arm_right - topic will not publish!')
+        if not self.gripper_left_joint_ids:
+            self.get_logger().warn('No joint IDs found for gripper_left - topic will not publish!')
+        if not self.gripper_right_joint_ids:
+            self.get_logger().warn('No joint IDs found for gripper_right - topic will not publish!')
         
         self.arm_left_actuator_ids = self._get_actuator_ids(self.arm_left_joint_names)
         self.arm_right_actuator_ids = self._get_actuator_ids(self.arm_right_joint_names)

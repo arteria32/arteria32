@@ -124,9 +124,12 @@ class Dependencies:
         }
         
         # Define joint name mappings (group -> list of joint names)
+        # IMPORTANT: These names MUST match your MuJoCo model's joint names exactly!
+        # Check your model XML for the correct joint names.
+        # If a joint name doesn't match, it won't be found and the topic won't publish.
         joint_names = {
             'arm_left': [
-                'arm_left_joint_1',
+                'arm_left_joint_1',  # TODO: Replace with actual joint names from your model
                 'arm_left_joint_2',
                 'arm_left_joint_3',
                 'arm_left_joint_4',
@@ -135,7 +138,7 @@ class Dependencies:
                 'arm_left_joint_7',
             ],
             'arm_right': [
-                'arm_right_joint_1',
+                'arm_right_joint_1',  # TODO: Replace with actual joint names from your model
                 'arm_right_joint_2',
                 'arm_right_joint_3',
                 'arm_right_joint_4',
@@ -143,8 +146,8 @@ class Dependencies:
                 'arm_right_joint_6',
                 'arm_right_joint_7',
             ],
-            'gripper_left': ['gripper_left_joint'],
-            'gripper_right': ['gripper_right_joint'],
+            'gripper_left': ['gripper_left_joint'],  # TODO: Replace with actual joint name
+            'gripper_right': ['gripper_right_joint'],  # TODO: Replace with actual joint name
         }
         
         return MujocoROS2Bridge(
