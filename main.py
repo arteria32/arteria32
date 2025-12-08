@@ -74,12 +74,17 @@ def step(time: float, dt: float):
     # === ROS2 Integration (only if enabled) ===
     if ros2_enabled and dependencies.mujoco_ROS2_bridge is not None:
         import rclpy
-        # Step the ROS2 bridge to publish data at the configured rate
-        dependencies.mujoco_ROS2_bridge.step(time)
         
         # Process any pending ROS2 callbacks (subscriptions, services, etc.)
+        # This receives control commands from /motion_control/* topics
         # timeout_sec=0 means non-blocking - returns immediately if no work
         rclpy.spin_once(dependencies.mujoco_ROS2_bridge, timeout_sec=0)
+        
+        # Step the ROS2 bridge to publish feedback data at the configured rate
+        # Set apply_controls=True if you want the bridge to directly apply
+        # control commands to MuJoCo. Set to False if your own controllers
+        # handle the control inputs separately.
+        dependencies.mujoco_ROS2_bridge.step(time, apply_controls=False)
     
     return
 

@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from typing import Optional
 
 import numpy as np
 import mujoco
@@ -15,6 +16,19 @@ class MujocoROS2Bridge(Node):
     """ROS2 bridge for MuJoCo simulation data.
     
     This class is biased towards R1 Pro with grippers.
+    
+    Publishers (feedback from simulation):
+        /hdas/feedback_arm_left - JointState
+        /hdas/feedback_arm_right - JointState
+        /hdas/feedback_gripper_left - JointState
+        /hdas/feedback_gripper_right - JointState
+        /hdas/camera_* - CompressedImage
+    
+    Subscribers (control inputs to simulation):
+        /motion_control/control_arm_left - JointState (position field = p_des)
+        /motion_control/control_arm_right - JointState (position field = p_des)
+        /motion_control/control_gripper_left - JointState (position field = p_des, 0-100mm)
+        /motion_control/control_gripper_right - JointState (position field = p_des, 0-100mm)
     """
     
     model: MjModel = property(lambda self: self._model_getter())
@@ -57,6 +71,36 @@ class MujocoROS2Bridge(Node):
         
         # map publisher keys to MuJoCo camera names
         self.camera_names = camera_names or {}
+        
+        # === Control input storage ===
+        # These store the latest received control commands
+        self._arm_left_cmd: Optional[JointState] = None
+        self._arm_right_cmd: Optional[JointState] = None
+        self._gripper_left_cmd: Optional[JointState] = None
+        self._gripper_right_cmd: Optional[JointState] = None
+        
+        # === Control subscribers ===
+        # Using JointState as standard message (position field = p_des)
+        self.arm_left_ctrl_sub = self.create_subscription(
+            JointState,
+            '/motion_control/control_arm_left',
+            self._arm_left_ctrl_callback,
+            10)
+        self.arm_right_ctrl_sub = self.create_subscription(
+            JointState,
+            '/motion_control/control_arm_right',
+            self._arm_right_ctrl_callback,
+            10)
+        self.gripper_left_ctrl_sub = self.create_subscription(
+            JointState,
+            '/motion_control/control_gripper_left',
+            self._gripper_left_ctrl_callback,
+            10)
+        self.gripper_right_ctrl_sub = self.create_subscription(
+            JointState,
+            '/motion_control/control_gripper_right',
+            self._gripper_right_ctrl_callback,
+            10)
         
         self.arm_left_pub = self.create_publisher(
             JointState, '/hdas/feedback_arm_left', 10)
@@ -113,6 +157,120 @@ class MujocoROS2Bridge(Node):
         # This avoids thread-safety issues with shared MjModel/MjData.
         
         self.get_logger().info('MuJoCo ROS2 Bridge initialized')
+        self.get_logger().info('Subscribed to control topics:')
+        self.get_logger().info('  /motion_control/control_arm_left')
+        self.get_logger().info('  /motion_control/control_arm_right')
+        self.get_logger().info('  /motion_control/control_gripper_left')
+        self.get_logger().info('  /motion_control/control_gripper_right')
+    
+    # === Control input callbacks ===
+    
+    def _arm_left_ctrl_callback(self, msg: JointState):
+        """Callback for left arm control commands."""
+        self._arm_left_cmd = msg
+        self.get_logger().debug(f'Received arm_left control: {len(msg.position)} positions')
+    
+    def _arm_right_ctrl_callback(self, msg: JointState):
+        """Callback for right arm control commands."""
+        self._arm_right_cmd = msg
+        self.get_logger().debug(f'Received arm_right control: {len(msg.position)} positions')
+    
+    def _gripper_left_ctrl_callback(self, msg: JointState):
+        """Callback for left gripper control commands."""
+        self._gripper_left_cmd = msg
+        self.get_logger().debug(f'Received gripper_left control: {msg.position}')
+    
+    def _gripper_right_ctrl_callback(self, msg: JointState):
+        """Callback for right gripper control commands."""
+        self._gripper_right_cmd = msg
+        self.get_logger().debug(f'Received gripper_right control: {msg.position}')
+    
+    # === Control application methods ===
+    
+    def apply_control_commands(self):
+        """Apply all received control commands to the MuJoCo simulation.
+        
+        Call this method in your simulation step to apply the latest control inputs.
+        """
+        self._apply_arm_control(self._arm_left_cmd, self.arm_left_joint_ids)
+        self._apply_arm_control(self._arm_right_cmd, self.arm_right_joint_ids)
+        self._apply_gripper_control(self._gripper_left_cmd, self.gripper_left_joint_ids)
+        self._apply_gripper_control(self._gripper_right_cmd, self.gripper_right_joint_ids)
+    
+    def _apply_arm_control(self, cmd: Optional[JointState], joint_ids: list):
+        """Apply arm control command to MuJoCo.
+        
+        Args:
+            cmd: JointState message with position field containing p_des
+                 [Joint1 pos, Joint2 pos, ..., Joint7 pos]
+            joint_ids: List of MuJoCo joint IDs
+        """
+        if cmd is None or not joint_ids:
+            return
+        
+        if len(cmd.position) != len(joint_ids):
+            self.get_logger().warn(
+                f'Arm control position count mismatch: got {len(cmd.position)}, expected {len(joint_ids)}'
+            )
+            return
+        
+        for i, joint_id in enumerate(joint_ids):
+            if joint_id >= 0 and i < len(cmd.position):
+                qpos_adr = self.model.jnt_qposadr[joint_id]
+                self.data.qpos[qpos_adr] = cmd.position[i]
+    
+    def _apply_gripper_control(self, cmd: Optional[JointState], joint_ids: list):
+        """Apply gripper control command to MuJoCo.
+        
+        Args:
+            cmd: JointState message with position field containing p_des (0-100mm)
+            joint_ids: List of MuJoCo joint IDs for gripper
+        """
+        if cmd is None or not joint_ids or not cmd.position:
+            return
+        
+        # Gripper position is in mm (0-100), convert to meters
+        # Also divide by 2 since model has qpos range for each gripper for 5 cm
+        pos_mm = cmd.position[0]
+        pos_mm = max(0.0, min(100.0, pos_mm))  # Clamp to valid range
+        pos_meters = (pos_mm / 1000.0) / 2.0  # Convert mm to m and divide by 2
+        
+        for joint_id in joint_ids:
+            if joint_id >= 0:
+                qpos_adr = self.model.jnt_qposadr[joint_id]
+                self.data.qpos[qpos_adr] = pos_meters
+    
+    def get_arm_left_command(self) -> Optional[JointState]:
+        """Get the latest arm left control command."""
+        return self._arm_left_cmd
+    
+    def get_arm_right_command(self) -> Optional[JointState]:
+        """Get the latest arm right control command."""
+        return self._arm_right_cmd
+    
+    def get_gripper_left_command(self) -> Optional[JointState]:
+        """Get the latest gripper left control command."""
+        return self._gripper_left_cmd
+    
+    def get_gripper_right_command(self) -> Optional[JointState]:
+        """Get the latest gripper right control command."""
+        return self._gripper_right_cmd
+    
+    def has_pending_commands(self) -> bool:
+        """Check if there are any pending control commands."""
+        return any([
+            self._arm_left_cmd is not None,
+            self._arm_right_cmd is not None,
+            self._gripper_left_cmd is not None,
+            self._gripper_right_cmd is not None,
+        ])
+    
+    def clear_commands(self):
+        """Clear all pending control commands after they've been applied."""
+        self._arm_left_cmd = None
+        self._arm_right_cmd = None
+        self._gripper_left_cmd = None
+        self._gripper_right_cmd = None
     
     def _get_joint_ids(self, joint_names: list = None) -> list:
         """Get MuJoCo joint IDs from joint names."""
@@ -159,12 +317,21 @@ class MujocoROS2Bridge(Node):
                 actuator_ids.append(-1)
         return actuator_ids
     
-    def step(self, sim_time: float):
+    def step(self, sim_time: float, apply_controls: bool = False):
         """Called from the simulation loop to check if publishing is needed.
         
         Args:
             sim_time: Current simulation time in seconds.
+            apply_controls: If True, apply any pending control commands to MuJoCo.
+                           Set to True if you want the bridge to directly control
+                           the simulation. Set to False if you handle controls
+                           separately in your own controllers.
         """
+        # Apply control commands if requested
+        if apply_controls:
+            self.apply_control_commands()
+        
+        # Publish feedback at the configured rate
         if sim_time - self._last_publish_time >= self.publish_period:
             self.publish_all()
             self._last_publish_time = sim_time

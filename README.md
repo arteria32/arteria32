@@ -69,7 +69,9 @@ workspace/
     └── scenario.py                  # Scenario setup
 ```
 
-## ROS2 Topics Published
+## ROS2 Topics
+
+### Published (Feedback from Simulation)
 
 | Topic | Type | Description |
 |-------|------|-------------|
@@ -80,6 +82,63 @@ workspace/
 | `/hdas/feedback_arm_right` | `JointState` | Right arm joint state |
 | `/hdas/feedback_gripper_left` | `JointState` | Left gripper state |
 | `/hdas/feedback_gripper_right` | `JointState` | Right gripper state |
+
+### Subscribed (Control Inputs to Simulation)
+
+| Topic | Type | Description |
+|-------|------|-------------|
+| `/motion_control/control_arm_left` | `JointState` | Left arm position commands |
+| `/motion_control/control_arm_right` | `JointState` | Right arm position commands |
+| `/motion_control/control_gripper_left` | `JointState` | Left gripper position (0-100mm) |
+| `/motion_control/control_gripper_right` | `JointState` | Right gripper position (0-100mm) |
+
+### Control Message Format (JointState)
+
+Using standard `sensor_msgs/JointState` instead of custom `hdas_msg::msg::MotorControl`:
+
+**Arm Control:**
+```python
+# JointState message for arm control
+msg.position = [j1, j2, j3, j4, j5, j6, j7]  # p_des - 7 joint positions in radians
+msg.velocity = []  # v_des - not used
+msg.effort = []    # t_ff - not used
+```
+
+**Gripper Control:**
+```python
+# JointState message for gripper control
+msg.position = [gripper_pos]  # p_des - gripper position 0-100mm
+msg.velocity = []  # v_des - not used
+msg.effort = []    # t_ff - not used
+```
+
+### Example: Sending Control Commands
+
+```python
+import rclpy
+from rclpy.node import Node
+from sensor_msgs.msg import JointState
+
+class ArmController(Node):
+    def __init__(self):
+        super().__init__('arm_controller')
+        self.arm_left_pub = self.create_publisher(
+            JointState, '/motion_control/control_arm_left', 10)
+        self.gripper_left_pub = self.create_publisher(
+            JointState, '/motion_control/control_gripper_left', 10)
+    
+    def send_arm_command(self, positions: list):
+        msg = JointState()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.position = positions  # [j1, j2, j3, j4, j5, j6, j7]
+        self.arm_left_pub.publish(msg)
+    
+    def send_gripper_command(self, position_mm: float):
+        msg = JointState()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.position = [position_mm]  # 0-100mm
+        self.gripper_left_pub.publish(msg)
+```
 
 ## Usage
 
