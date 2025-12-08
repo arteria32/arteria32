@@ -40,6 +40,7 @@ class LaunchOptions:
         video_speed: float = 1.0,
         video_framerate: int = 60,
         video_partition_by: float = None,
+        publish_ros2: bool = False,  # Enable ROS2 data publishing
     ):
         self.scenario_name = scenario_name
         self.box_name = box_name
@@ -54,3 +55,4 @@ class LaunchOptions:
         self.video_speed = video_speed
         self.video_framerate = video_framerate
         self.video_partition_by = video_partition_by
+        self.publish_ros2 = publish_ros2

@@ -1,13 +1,13 @@
 """Dependencies module - creates and manages all simulation components."""
 
 from collections.abc import Callable
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from grasp_box.launch_options import LaunchOptions
-from grasp_box.mujoco_ros2_bridge import MujocoROS2Bridge
 
 if TYPE_CHECKING:
     from mujoco import MjModel, MjData
+    from grasp_box.mujoco_ros2_bridge import MujocoROS2Bridge
 
 
 class Dependencies:
@@ -32,9 +32,12 @@ class Dependencies:
         # Initialize all controllers...
         self._init_controllers()
         
-        # Initialize ROS2 bridge AFTER rclpy.init() has been called in main.py
-        # The bridge shares the same model/data as the launcher
-        self.mujoco_ROS2_bridge = self._create_ros2_bridge()
+        # Initialize ROS2 bridge only if publishing is enabled
+        # IMPORTANT: rclpy.init() must be called in main.py before this
+        if launch_options.publish_ros2:
+            self.mujoco_ROS2_bridge = self._create_ros2_bridge()
+        else:
+            self.mujoco_ROS2_bridge = None
     
     def _create_launcher(self):
         """Create the MuJoCo launcher."""
@@ -105,11 +108,14 @@ class Dependencies:
         self.joints_limits_controller = _DummyController()
         self.fire_equality_controller = _DummyController()
     
-    def _create_ros2_bridge(self) -> MujocoROS2Bridge:
+    def _create_ros2_bridge(self) -> 'MujocoROS2Bridge':
         """Create the ROS2 bridge for publishing MuJoCo data.
         
         IMPORTANT: This must be called AFTER rclpy.init() in main.py
         """
+        # Import here to avoid loading ROS2 dependencies when not needed
+        from grasp_box.mujoco_ros2_bridge import MujocoROS2Bridge
+        
         # Define camera name mappings (publisher key -> MuJoCo camera name)
         camera_names = {
             'wrist_left': 'camera_wrist_left',    # Replace with your actual camera names

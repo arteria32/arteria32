@@ -84,13 +84,19 @@ workspace/
 ## Usage
 
 ```bash
-# Basic run
+# Basic run (simulation only, no ROS2)
 python main.py
 
-# With arguments
-python main.py --headless_mode --collect_data
+# Enable ROS2 publishing
+python main.py --publish_ros2
 
-# Check ROS2 topics
+# With other arguments
+python main.py --publish_ros2 --headless_mode --collect_data
+
+# Explicitly disable ROS2 (default)
+python main.py --no_publish_ros2
+
+# Check ROS2 topics (when publish_ros2 is enabled)
 ros2 topic list
 ros2 topic echo /hdas/feedback_arm_left
 ```

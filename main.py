@@ -1,11 +1,11 @@
 import argparse
-import rclpy
 
 import grasp_box.scenario
 from grasp_box.dependencies import Dependencies
 from grasp_box.launch_options import *
 
 dependencies: Dependencies
+ros2_enabled: bool = False
 
 
 def step(time: float, dt: float):
@@ -71,13 +71,15 @@ def step(time: float, dt: float):
     dependencies.joints_limits_controller.step(dt)
     dependencies.fire_equality_controller.step(dt)
     
-    # === ROS2 Integration ===
-    # Step the ROS2 bridge to publish data at the configured rate
-    dependencies.mujoco_ROS2_bridge.step(time)
-    
-    # Process any pending ROS2 callbacks (subscriptions, services, etc.)
-    # timeout_sec=0 means non-blocking - returns immediately if no work
-    rclpy.spin_once(dependencies.mujoco_ROS2_bridge, timeout_sec=0)
+    # === ROS2 Integration (only if enabled) ===
+    if ros2_enabled and dependencies.mujoco_ROS2_bridge is not None:
+        import rclpy
+        # Step the ROS2 bridge to publish data at the configured rate
+        dependencies.mujoco_ROS2_bridge.step(time)
+        
+        # Process any pending ROS2 callbacks (subscriptions, services, etc.)
+        # timeout_sec=0 means non-blocking - returns immediately if no work
+        rclpy.spin_once(dependencies.mujoco_ROS2_bridge, timeout_sec=0)
     
     return
 
@@ -120,14 +122,21 @@ def parse_arguments():
     parser.add_argument("--video_framerate", type=int, default=60, help="Framerate for the video.")
     parser.add_argument("--video_partition_by", type=float, default=None, help="Time to partition video by (in seconds).")
 
+    parser.add_argument("--publish_ros2", action='store_true', help="Enable ROS2 data publishing.")
+    parser.add_argument("--no_publish_ros2", action='store_false', dest="publish_ros2")
+    parser.set_defaults(publish_ros2=False)
+
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_arguments()
 
-    # === Initialize ROS2 FIRST (before creating any nodes) ===
-    rclpy.init()
+    # === Initialize ROS2 only if publishing is enabled ===
+    ros2_enabled = args.publish_ros2
+    if ros2_enabled:
+        import rclpy
+        rclpy.init()
 
     # recording_mode = False
     recording_mode = True
@@ -173,6 +182,7 @@ if __name__ == "__main__":
         # video_framerate=60,
         video_partition_by=args.video_partition_by,
         # video_partition_by=None,
+        publish_ros2=ros2_enabled,
     )
 
     try:
@@ -187,7 +197,9 @@ if __name__ == "__main__":
         else:
             dependencies.launcher.start(0)
     finally:
-        # === Cleanup ROS2 ===
-        if dependencies is not None and hasattr(dependencies, 'mujoco_ROS2_bridge'):
-            dependencies.mujoco_ROS2_bridge.destroy_node()
-        rclpy.shutdown()
+        # === Cleanup ROS2 (only if it was enabled) ===
+        if ros2_enabled:
+            import rclpy
+            if dependencies is not None and dependencies.mujoco_ROS2_bridge is not None:
+                dependencies.mujoco_ROS2_bridge.destroy_node()
+            rclpy.shutdown()
