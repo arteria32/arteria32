@@ -13,7 +13,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Configure base dependencies
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y python3-pip wget libglfw3-dev git ffmpeg zip unzip
+RUN apt-get install -y python3-pip python3-venv wget libglfw3-dev git ffmpeg zip unzip
 RUN pip3 install xacro
 
 # Install Poetry via pipx
