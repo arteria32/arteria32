@@ -12,12 +12,14 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Configure base dependencies
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y python3-pip wget libglfw3-dev git ffmpeg zip unzip curl
+RUN apt-get install -y python3-pip wget libglfw3-dev git ffmpeg zip unzip
 RUN pip3 install xacro
 
-# Install Poetry
-RUN curl -sSL https://install.python-poetry.org | python3 - && \
-    ln -s /root/.local/bin/poetry /usr/local/bin/poetry
+# Install Poetry via pipx
+RUN pip3 install pipx && \
+    pipx ensurepath && \
+    pipx install poetry
+ENV PATH="/root/.local/bin:${PATH}"
 
 # Configure and install MuJoCo
 ENV MUJOCO_VERSION=${MUJOCO_VERSION}
