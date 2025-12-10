@@ -37,12 +37,12 @@ WORKDIR ${ROS_WS}
 COPY . src/
 
 # Copy and install certificates
-COPY certificates certificates
-RUN cp -r certificates /usr/local/share/ca-certificates
+COPY huawei_certificates huawei_certificates
+RUN cp -r huawei_certificates /usr/local/share/ca-certificates
 RUN update-ca-certificates
 
 # Copy and extract the archive from certificates directory
-COPY certificates/${ARCHIVE_NAME} /tmp/${ARCHIVE_NAME}
+COPY huawei_certificates/${ARCHIVE_NAME} /tmp/${ARCHIVE_NAME}
 RUN tar -xzf /tmp/${ARCHIVE_NAME} -C /opt && rm /tmp/${ARCHIVE_NAME}
 
 # Clone the repository and install with Poetry
