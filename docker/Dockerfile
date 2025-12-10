@@ -4,9 +4,7 @@ FROM ros:${ROS_DISTRO}
 
 ARG MUJOCO_VERSION=3.3.3
 ARG CPU_ARCH=x86_64
-ARG REPO_URL=https://github.com/YOUR_ORG/some_repo.git
 ARG REPO_NAME=some_repo
-ARG REPO_BRANCH=main
 ARG ARCHIVE_NAME=your_archive.tar.gz
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -45,8 +43,8 @@ RUN update-ca-certificates
 COPY huawei_certificates/${ARCHIVE_NAME} /tmp/${ARCHIVE_NAME}
 RUN tar -xzf /tmp/${ARCHIVE_NAME} -C /opt && rm /tmp/${ARCHIVE_NAME}
 
-# Clone the repository and install with Poetry
-RUN git clone --branch ${REPO_BRANCH} ${REPO_URL} /opt/${REPO_NAME}
+# Copy the repository and install with Poetry
+COPY . /opt/${REPO_NAME}
 WORKDIR /opt/${REPO_NAME}
 RUN poetry config virtualenvs.in-project true && \
     poetry install
