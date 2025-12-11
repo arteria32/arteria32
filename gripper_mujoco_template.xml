@@ -1,0 +1,92 @@
+<!--
+MuJoCo Gripper Template with Two Independent Finger Joints
+
+This template shows how to set up a parallel gripper with two fingers
+that can be controlled independently or together.
+
+After splitting your gripper STL using split_gripper_stl.py, 
+replace the mesh files below with your actual split files.
+-->
+
+<mujoco model="gripper">
+  <compiler angle="radian" meshdir="meshes/"/>
+  
+  <option timestep="0.002" gravity="0 0 -9.81"/>
+  
+  <asset>
+    <!-- Replace these with your split gripper meshes -->
+    <mesh name="gripper_base" file="gripper_base.stl"/>
+    <mesh name="finger_left" file="gripper_left.stl"/>
+    <mesh name="finger_right" file="gripper_right.stl"/>
+    
+    <material name="gripper_material" rgba="0.7 0.7 0.7 1"/>
+  </asset>
+  
+  <worldbody>
+    <light pos="0 0 2" dir="0 0 -1"/>
+    <geom name="floor" type="plane" size="1 1 0.1" rgba="0.9 0.9 0.9 1"/>
+    
+    <!-- Gripper Assembly -->
+    <body name="gripper_base" pos="0 0 0.5">
+      <geom name="base_geom" type="mesh" mesh="gripper_base" material="gripper_material"/>
+      
+      <!-- Left Finger -->
+      <body name="finger_left" pos="0 0 0">
+        <!-- Prismatic joint for sliding motion (typical for parallel grippers) -->
+        <joint name="finger_left_joint" 
+               type="slide" 
+               axis="0 1 0"
+               range="-0.05 0.05"
+               damping="10"
+               stiffness="0"/>
+        <geom name="finger_left_geom" 
+              type="mesh" 
+              mesh="finger_left" 
+              material="gripper_material"
+              friction="1 0.005 0.0001"/>
+      </body>
+      
+      <!-- Right Finger -->
+      <body name="finger_right" pos="0 0 0">
+        <!-- Prismatic joint for sliding motion -->
+        <joint name="finger_right_joint" 
+               type="slide" 
+               axis="0 1 0"
+               range="-0.05 0.05"
+               damping="10"
+               stiffness="0"/>
+        <geom name="finger_right_geom" 
+              type="mesh" 
+              mesh="finger_right" 
+              material="gripper_material"
+              friction="1 0.005 0.0001"/>
+      </body>
+    </body>
+  </worldbody>
+  
+  <actuator>
+    <!-- Option 1: Independent control of each finger -->
+    <position name="left_finger_actuator" joint="finger_left_joint" kp="100"/>
+    <position name="right_finger_actuator" joint="finger_right_joint" kp="100"/>
+    
+    <!-- Option 2: Mimic joint for synchronized movement (uncomment if needed)
+    <position name="gripper_actuator" joint="finger_left_joint" kp="100"/>
+    -->
+  </actuator>
+  
+  <!-- 
+  For synchronized finger movement using tendon equality constraint:
+  
+  <equality>
+    <joint joint1="finger_left_joint" joint2="finger_right_joint" polycoef="0 -1 0 0 0"/>
+  </equality>
+  
+  This makes the fingers move in opposite directions (closing/opening together)
+  -->
+  
+  <equality>
+    <!-- Uncomment below for mirrored movement (fingers move in opposite directions) -->
+    <!-- <joint joint1="finger_left_joint" joint2="finger_right_joint" polycoef="0 -1 0 0 0"/> -->
+  </equality>
+
+</mujoco>
