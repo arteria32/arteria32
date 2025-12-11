@@ -23,8 +23,14 @@ try:
 except ImportError:
     print("Installing required package: trimesh...")
     import subprocess
-    subprocess.check_call(["pip", "install", "trimesh"])
+    subprocess.check_call(["pip", "install", "trimesh", "networkx"])
     import trimesh
+
+try:
+    import networkx
+    HAS_GRAPH_ENGINE = True
+except ImportError:
+    HAS_GRAPH_ENGINE = False
 
 
 def split_by_connected_components(mesh: trimesh.Trimesh) -> list:
@@ -32,9 +38,20 @@ def split_by_connected_components(mesh: trimesh.Trimesh) -> list:
     Split mesh into connected components.
     Works best when gripper fingers are separate meshes combined into one file.
     """
-    components = mesh.split(only_watertight=False)
-    print(f"Found {len(components)} connected component(s)")
-    return components
+    if not HAS_GRAPH_ENGINE:
+        print("Error: 'networkx' package required for component splitting.")
+        print("Install it with: pip install networkx")
+        print("Or use axis-based splitting: --method x (or y, z)")
+        return [mesh]
+    
+    try:
+        components = mesh.split(only_watertight=False)
+        print(f"Found {len(components)} connected component(s)")
+        return components
+    except Exception as e:
+        print(f"Error splitting by components: {e}")
+        print("Try axis-based splitting instead: --method x (or y, z)")
+        return [mesh]
 
 
 def split_by_axis(mesh: trimesh.Trimesh, axis: str = 'x', threshold: float = None) -> list:
@@ -127,18 +144,32 @@ def analyze_mesh(mesh: trimesh.Trimesh):
     print("\n=== Mesh Analysis ===")
     print(f"Vertices: {len(mesh.vertices)}")
     print(f"Faces: {len(mesh.faces)}")
-    print(f"Bounds: {mesh.bounds}")
-    print(f"Centroid: {mesh.centroid}")
-    print(f"Extents (size): {mesh.extents}")
+    print(f"Bounds:")
+    print(f"  X: {mesh.bounds[0][0]:.4f} to {mesh.bounds[1][0]:.4f} (extent: {mesh.extents[0]:.4f})")
+    print(f"  Y: {mesh.bounds[0][1]:.4f} to {mesh.bounds[1][1]:.4f} (extent: {mesh.extents[1]:.4f})")
+    print(f"  Z: {mesh.bounds[0][2]:.4f} to {mesh.bounds[1][2]:.4f} (extent: {mesh.extents[2]:.4f})")
+    print(f"Centroid: [{mesh.centroid[0]:.4f}, {mesh.centroid[1]:.4f}, {mesh.centroid[2]:.4f}]")
     
-    # Check for connected components
-    components = mesh.split(only_watertight=False)
-    print(f"Connected components: {len(components)}")
+    # Check for connected components (requires networkx or scipy)
+    if HAS_GRAPH_ENGINE:
+        try:
+            components = mesh.split(only_watertight=False)
+            print(f"Connected components: {len(components)}")
+            
+            if len(components) > 1:
+                print("\nComponent sizes:")
+                for i, comp in enumerate(components):
+                    print(f"  Component {i+1}: {len(comp.faces)} faces")
+        except Exception as e:
+            print(f"Could not analyze components: {e}")
+    else:
+        print("Connected components: (install 'networkx' to detect)")
     
-    if len(components) > 1:
-        print("\nComponent sizes:")
-        for i, comp in enumerate(components):
-            print(f"  Component {i+1}: {len(comp.faces)} faces")
+    # Suggest split axis based on extents
+    axes = ['x', 'y', 'z']
+    max_extent_idx = np.argmax(mesh.extents)
+    print(f"\nSuggested split axis: '{axes[max_extent_idx]}' (largest extent)")
+    print(f"  Command: python3 split_gripper_stl.py your_file.stl --method {axes[max_extent_idx]}")
     
     print("=" * 25 + "\n")
 
