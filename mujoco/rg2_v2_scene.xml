@@ -1,0 +1,17 @@
+<mujoco model="rg2_v2_scene">
+  <compiler angle="radian" />
+  <option gravity="0 0 -9.81" timestep="0.001" iterations="60"/>
+
+  <include file="rg2_v2_assets.xml"/>
+  <include file="rg2_v2_coupling.xml"/>
+
+  <worldbody>
+    <light name="key" pos="0 0 1" dir="0 0 -1"/>
+    <geom name="floor" type="plane" size="2 2 0.1" rgba="0.9 0.9 0.9 1"/>
+
+    <body name="rg2_v2_mount" pos="0 0 0.25">
+      <freejoint/>
+      <include file="rg2_v2_gripper_body.xml"/>
+    </body>
+  </worldbody>
+</mujoco>

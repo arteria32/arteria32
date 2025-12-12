@@ -1,0 +1,23 @@
+<mujocoinclude>
+  <equality>
+    <!-- Mimic relationships (multiplier=1, offset=0) -->
+    <joint joint1="rg2_v2_gripper_joint" joint2="rg2_v2_gripper_mirror_joint" polycoef="0 1 0 0 0"
+           solref="0.03 1" solimp="0.9 0.95 0.001 0.5 2"/>
+
+    <joint joint1="rg2_v2_gripper_joint" joint2="rg2_v2_finger_1_truss_arm_joint" polycoef="0 1 0 0 0"
+           solref="0.03 1" solimp="0.9 0.95 0.001 0.5 2"/>
+    <joint joint1="rg2_v2_gripper_joint" joint2="rg2_v2_finger_1_finger_tip_joint" polycoef="0 1 0 0 0"
+           solref="0.03 1" solimp="0.9 0.95 0.001 0.5 2"/>
+
+    <joint joint1="rg2_v2_gripper_joint" joint2="rg2_v2_finger_2_truss_arm_joint" polycoef="0 1 0 0 0"
+           solref="0.03 1" solimp="0.9 0.95 0.001 0.5 2"/>
+    <joint joint1="rg2_v2_gripper_joint" joint2="rg2_v2_finger_2_finger_tip_joint" polycoef="0 1 0 0 0"
+           solref="0.03 1" solimp="0.9 0.95 0.001 0.5 2"/>
+  </equality>
+
+  <actuator>
+    <position name="rg2_v2_open_close" joint="rg2_v2_gripper_joint"
+              kp="40" kv="5"
+              ctrlrange="0 1.3" forcerange="-50 50"/>
+  </actuator>
+</mujocoinclude>
