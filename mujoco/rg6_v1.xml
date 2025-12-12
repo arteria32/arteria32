@@ -1,0 +1,140 @@
+<mujoco model="rg6_v1">
+  <compiler angle="radian" meshdir="../onrobot_ros/onrobot_description/meshes/rg6_v1/visual" />
+
+  <default>
+    <default class="visual">
+      <geom type="mesh" contype="0" conaffinity="0" group="2" rgba="0.75 0.75 0.75 1"/>
+    </default>
+    <default class="collision">
+      <geom type="box" group="3" rgba="0.2 0.6 0.2 0.15"/>
+    </default>
+  </default>
+
+  <asset>
+    <!-- visual meshes from onrobot_description/meshes/rg6_v1/visual -->
+    <mesh name="rg6_body" file="body.stl"/>
+    <mesh name="rg6_single_bracket" file="single_bracket.stl"/>
+    <mesh name="rg6_moment_arm" file="moment_arm.stl"/>
+    <mesh name="rg6_truss_arm" file="truss_arm.stl"/>
+    <mesh name="rg6_finger_tip" file="finger_tip.stl"/>
+    <mesh name="rg6_flex_finger" file="flex_finger.stl"/>
+    <mesh name="rg6_safety_shield" file="safety_shield.stl"/>
+  </asset>
+
+  <worldbody>
+    <!-- Include this body under your robot wrist; do NOT add a freejoint here. -->
+    <body name="rg6">
+      <!-- bracket (link: gripper_bracket) -->
+      <geom class="visual" mesh="rg6_single_bracket"/>
+      <inertial pos="0 0 0" mass="0.001" diaginertia="0.001 0.001 0.001"/>
+
+      <!-- body (link: gripper_body), fixed joint at origin[single_bracket] -->
+      <body name="rg6_body" pos="0 0 0.051">
+        <geom class="visual" mesh="rg6_body" rgba="0.85 0.85 0.85 1"/>
+        <inertial pos="0 0 0" mass="0.78" diaginertia="0.001 0.001 0.001"/>
+
+        <!-- grasp frame (site) at origin[grasp_frame] -->
+        <site name="rg6_grasp_frame" pos="0 0 0.19" size="0.005" rgba="1 0 0 1"/>
+
+        <!-- Finger 1 (master) -->
+        <body name="rg6_finger_1_origin" euler="0 0 0">
+          <inertial pos="0 0 0" mass="0.001" diaginertia="0.00001 0.00001 0.00001"/>
+
+          <!-- moment arm: revolute about +Y, frame at origin[moment_arm] with rpy(0, offset, 0) -->
+          <body name="rg6_finger_1_moment_arm" pos="-0.0238 0 0.066" euler="0 -0.49 0">
+            <joint name="rg6_gripper_joint" type="hinge" axis="0 1 0" range="0 1.3" damping="0.17"/>
+            <geom class="visual" mesh="rg6_moment_arm"/>
+            <inertial pos="0 0 0" mass="0.001" diaginertia="0.001 0.001 0.001"/>
+          </body>
+
+          <!-- truss arm: revolute about +Y, mimics rg6_gripper_joint -->
+          <body name="rg6_finger_1_truss_arm" pos="-0.0105 0 0.0891" euler="0 -0.49 0">
+            <joint name="rg6_finger_1_truss_arm_joint" type="hinge" axis="0 1 0" range="0 1.3"/>
+            <geom class="visual" mesh="rg6_truss_arm"/>
+            <inertial pos="0 0 0" mass="0.001" diaginertia="0.001 0.001 0.001"/>
+
+            <!-- finger tip: revolute about -Y, mimics rg6_gripper_joint -->
+            <body name="rg6_finger_1_finger_tip" pos="-0.05503 0 0.05807" euler="0 0.49 0">
+              <joint name="rg6_finger_1_finger_tip_joint" type="hinge" axis="0 -1 0" range="0 1.3"/>
+              <geom class="visual" mesh="rg6_finger_tip"/>
+              <inertial pos="0 0 0" mass="0.001" diaginertia="0.001 0.001 0.001"/>
+
+              <!-- optional safety shield: revolute about +Y, mimics rg6_gripper_joint -->
+              <body name="rg6_finger_1_safety_shield" pos="-0.00665 0 -0.01155" euler="0 -0.49 0">
+                <joint name="rg6_finger_1_safety_shield_joint" type="hinge" axis="0 1 0" range="0 1.3"/>
+                <geom class="visual" mesh="rg6_safety_shield" rgba="0.25 0.25 0.25 1"/>
+                <inertial pos="0 0 0" mass="0.001" diaginertia="0.001 0.001 0.001"/>
+              </body>
+
+              <!-- flex finger: fixed -->
+              <body name="rg6_finger_1_flex_finger" pos="0.0098 0 0.0218">
+                <geom class="visual" mesh="rg6_flex_finger" rgba="0.25 0.25 0.25 1"/>
+                <inertial pos="0 0 0" mass="0.001" diaginertia="0.001 0.001 0.001"/>
+
+                <!-- simple collision proxy near fingertips (tune as needed) -->
+                <geom class="collision" size="0.007 0.012 0.02" pos="-0.02 0 0.02"/>
+              </body>
+            </body>
+          </body>
+        </body>
+
+        <!-- Finger 2 (mirror): fixed yaw pi; its moment arm is a separate joint that mimics master -->
+        <body name="rg6_finger_2_origin" euler="0 0 3.141592653589793">
+          <inertial pos="0 0 0" mass="0.001" diaginertia="0.00001 0.00001 0.00001"/>
+
+          <body name="rg6_finger_2_moment_arm" pos="-0.0238 0 0.066" euler="0 -0.49 0">
+            <joint name="rg6_gripper_mirror_joint" type="hinge" axis="0 1 0" range="0 1.3"/>
+            <geom class="visual" mesh="rg6_moment_arm"/>
+            <inertial pos="0 0 0" mass="0.001" diaginertia="0.001 0.001 0.001"/>
+          </body>
+
+          <body name="rg6_finger_2_truss_arm" pos="-0.0105 0 0.0891" euler="0 -0.49 0">
+            <joint name="rg6_finger_2_truss_arm_joint" type="hinge" axis="0 1 0" range="0 1.3"/>
+            <geom class="visual" mesh="rg6_truss_arm"/>
+            <inertial pos="0 0 0" mass="0.001" diaginertia="0.001 0.001 0.001"/>
+
+            <body name="rg6_finger_2_finger_tip" pos="-0.05503 0 0.05807" euler="0 0.49 0">
+              <joint name="rg6_finger_2_finger_tip_joint" type="hinge" axis="0 -1 0" range="0 1.3"/>
+              <geom class="visual" mesh="rg6_finger_tip"/>
+              <inertial pos="0 0 0" mass="0.001" diaginertia="0.001 0.001 0.001"/>
+
+              <body name="rg6_finger_2_safety_shield" pos="-0.00665 0 -0.01155" euler="0 -0.49 0">
+                <joint name="rg6_finger_2_safety_shield_joint" type="hinge" axis="0 1 0" range="0 1.3"/>
+                <geom class="visual" mesh="rg6_safety_shield" rgba="0.25 0.25 0.25 1"/>
+                <inertial pos="0 0 0" mass="0.001" diaginertia="0.001 0.001 0.001"/>
+              </body>
+
+              <body name="rg6_finger_2_flex_finger" pos="0.0098 0 0.0218">
+                <geom class="visual" mesh="rg6_flex_finger" rgba="0.25 0.25 0.25 1"/>
+                <inertial pos="0 0 0" mass="0.001" diaginertia="0.001 0.001 0.001"/>
+
+                <geom class="collision" size="0.007 0.012 0.02" pos="-0.02 0 0.02"/>
+              </body>
+            </body>
+          </body>
+        </body>
+
+        <!-- collision proxy for the main body (tune as needed) -->
+        <geom class="collision" size="0.03 0.03 0.04" pos="-0.01 0 0.06"/>
+      </body>
+    </body>
+  </worldbody>
+
+  <!-- Mimic relationships from the URDF (mimic multiplier=1) -->
+  <equality>
+    <joint joint1="rg6_gripper_joint" joint2="rg6_gripper_mirror_joint" polycoef="0 1 0 0 0"/>
+
+    <joint joint1="rg6_gripper_joint" joint2="rg6_finger_1_truss_arm_joint" polycoef="0 1 0 0 0"/>
+    <joint joint1="rg6_gripper_joint" joint2="rg6_finger_1_finger_tip_joint" polycoef="0 1 0 0 0"/>
+    <joint joint1="rg6_gripper_joint" joint2="rg6_finger_1_safety_shield_joint" polycoef="0 1 0 0 0"/>
+
+    <joint joint1="rg6_gripper_joint" joint2="rg6_finger_2_truss_arm_joint" polycoef="0 1 0 0 0"/>
+    <joint joint1="rg6_gripper_joint" joint2="rg6_finger_2_finger_tip_joint" polycoef="0 1 0 0 0"/>
+    <joint joint1="rg6_gripper_joint" joint2="rg6_finger_2_safety_shield_joint" polycoef="0 1 0 0 0"/>
+  </equality>
+
+  <actuator>
+    <!-- Drive a single joint; the rest follow via equality constraints. -->
+    <position name="rg6_open_close" joint="rg6_gripper_joint" kp="200" ctrlrange="0 1.3"/>
+  </actuator>
+</mujoco>

@@ -1,0 +1,21 @@
+<mujocoinclude>
+  <default>
+    <default class="visual">
+      <geom type="mesh" contype="0" conaffinity="0" group="2" rgba="0.75 0.75 0.75 1"/>
+    </default>
+    <default class="collision">
+      <geom type="box" group="3" rgba="0.2 0.6 0.2 0.15"/>
+    </default>
+  </default>
+
+  <asset>
+    <!-- visual meshes (relative to /workspace/mujoco) -->
+    <mesh name="rg6_body" file="../onrobot_ros/onrobot_description/meshes/rg6_v1/visual/body.stl"/>
+    <mesh name="rg6_single_bracket" file="../onrobot_ros/onrobot_description/meshes/rg6_v1/visual/single_bracket.stl"/>
+    <mesh name="rg6_moment_arm" file="../onrobot_ros/onrobot_description/meshes/rg6_v1/visual/moment_arm.stl"/>
+    <mesh name="rg6_truss_arm" file="../onrobot_ros/onrobot_description/meshes/rg6_v1/visual/truss_arm.stl"/>
+    <mesh name="rg6_finger_tip" file="../onrobot_ros/onrobot_description/meshes/rg6_v1/visual/finger_tip.stl"/>
+    <mesh name="rg6_flex_finger" file="../onrobot_ros/onrobot_description/meshes/rg6_v1/visual/flex_finger.stl"/>
+    <mesh name="rg6_safety_shield" file="../onrobot_ros/onrobot_description/meshes/rg6_v1/visual/safety_shield.stl"/>
+  </asset>
+</mujocoinclude>
