@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    OnRobot RG2 Gripper for MuJoCo
+    
+    Converted from: https://github.com/inria-paris-robotics-lab/onrobot_ros
+    
+    The RG2 is a four-bar linkage gripper with two mirrored fingers.
+    Each finger has: moment_arm -> truss_arm -> finger_tip -> flex_finger
+    
+    Key features:
+    - Single actuated joint controls the entire gripper
+    - Equality constraints implement the parallel linkage mechanism
+    - Both fingers move symmetrically (mirrored)
+    
+    Control:
+    - ctrl[0] = 0.0  -> Gripper closed
+    - ctrl[0] = 1.0  -> Gripper fully open (~110mm)
+-->
+<mujoco model="onrobot_rg2">
+    
+    <compiler angle="radian" meshdir="onrobot_ros/onrobot_description/meshes/rg2_v1/visual" eulerseq="xyz"/>
+    
+    <option timestep="0.002" gravity="0 0 -9.81" integrator="implicit"/>
+    
+    <visual>
+        <global offwidth="1280" offheight="960"/>
+        <quality shadowsize="4096"/>
+    </visual>
+    
+    <default>
+        <joint damping="0.5" armature="0.01"/>
+        <geom contype="1" conaffinity="1" friction="1 0.005 0.0001"/>
+        <!-- STL files are already in meters, no scaling needed -->
+    </default>
+    
+    <asset>
+        <!-- Gripper meshes -->
+        <mesh name="single_bracket" file="single_bracket.stl"/>
+        <mesh name="body" file="body.stl"/>
+        <mesh name="moment_arm" file="moment_arm.stl"/>
+        <mesh name="truss_arm" file="truss_arm.stl"/>
+        <mesh name="finger_tip" file="finger_tip.stl"/>
+        <mesh name="flex_finger" file="flex_finger.stl"/>
+        
+        <!-- Materials -->
+        <material name="grey" rgba="0.65 0.62 0.58 1"/>
+        <material name="light_grey" rgba="0.9 0.92 0.93 1"/>
+        <material name="dark_grey" rgba="0.25 0.25 0.25 1"/>
+    </asset>
+    
+    <worldbody>
+        <!-- Ground plane -->
+        <geom name="floor" type="plane" size="0.5 0.5 0.1" rgba="0.9 0.9 0.9 1"/>
+        <light pos="0 0 1.5" dir="0 0 -1" diffuse="1 1 1"/>
+        
+        <!-- Gripper mounting point (can be attached to robot arm) -->
+        <body name="gripper_mount" pos="0 0 0.3">
+            <!-- Fixed base for standalone testing -->
+            <geom type="cylinder" size="0.02 0.02" rgba="0.3 0.3 0.3 1" pos="0 0 -0.02"/>
+            
+            <!-- Mounting bracket -->
+            <body name="gripper_bracket" pos="0 0 0">
+                <geom name="bracket_geom" type="mesh" mesh="single_bracket" material="grey"/>
+                
+                <!-- Main gripper body -->
+                <body name="gripper_body" pos="0 0 0.05">
+                    <geom name="body_geom" type="mesh" mesh="body" material="light_grey"/>
+                    
+                    <!-- ===================== -->
+                    <!-- FINGER 1 (Master)     -->
+                    <!-- ===================== -->
+                    <body name="finger1_origin" pos="0 0 0" euler="0 0 0">
+                        
+                        <!-- Moment arm - main actuated joint -->
+                        <body name="finger1_moment_arm" pos="-0.017 0 0.055" euler="0 -0.772 0">
+                            <inertial pos="0 0 0.02" mass="0.01" diaginertia="0.00001 0.00001 0.00001"/>
+                            <joint name="gripper_joint" type="hinge" axis="0 1 0" range="0 1.3"/>
+                            <geom name="finger1_moment_geom" type="mesh" mesh="moment_arm" material="light_grey"/>
+                        </body>
+                        
+                        <!-- Truss arm - parallel linkage -->
+                        <body name="finger1_truss_arm" pos="-0.0075 0 0.0715" euler="0 -0.772 0">
+                            <inertial pos="0 0 0.02" mass="0.01" diaginertia="0.00001 0.00001 0.00001"/>
+                            <joint name="finger1_truss_joint" type="hinge" axis="0 1 0" range="0 1.3"/>
+                            <geom name="finger1_truss_geom" type="mesh" mesh="truss_arm" material="light_grey"/>
+                            
+                            <!-- Finger tip -->
+                            <body name="finger1_finger_tip" pos="-0.0256 0 0.04868" euler="0 0.772 0">
+                                <inertial pos="0 0 0.01" mass="0.01" diaginertia="0.00001 0.00001 0.00001"/>
+                                <joint name="finger1_tip_joint" type="hinge" axis="0 -1 0" range="-1.3 0"/>
+                                <geom name="finger1_tip_geom" type="mesh" mesh="finger_tip" material="light_grey"/>
+                                
+                                <!-- Flex finger (fixed to tip) -->
+                                <body name="finger1_flex_finger" pos="0.03059 0 0.0172">
+                                    <geom name="finger1_flex_geom" type="mesh" mesh="flex_finger" material="dark_grey"/>
+                                    <!-- Contact site for grasping -->
+                                    <site name="finger1_contact" pos="0 0 0.02" size="0.005"/>
+                                </body>
+                            </body>
+                        </body>
+                    </body>
+                    
+                    <!-- ===================== -->
+                    <!-- FINGER 2 (Mirror)     -->
+                    <!-- ===================== -->
+                    <body name="finger2_origin" pos="0 0 0" euler="0 0 3.14159">
+                        
+                        <!-- Moment arm - mirrored -->
+                        <body name="finger2_moment_arm" pos="-0.017 0 0.055" euler="0 -0.772 0">
+                            <inertial pos="0 0 0.02" mass="0.01" diaginertia="0.00001 0.00001 0.00001"/>
+                            <joint name="gripper_mirror_joint" type="hinge" axis="0 1 0" range="0 1.3"/>
+                            <geom name="finger2_moment_geom" type="mesh" mesh="moment_arm" material="light_grey"/>
+                        </body>
+                        
+                        <!-- Truss arm - mirrored -->
+                        <body name="finger2_truss_arm" pos="-0.0075 0 0.0715" euler="0 -0.772 0">
+                            <inertial pos="0 0 0.02" mass="0.01" diaginertia="0.00001 0.00001 0.00001"/>
+                            <joint name="finger2_truss_joint" type="hinge" axis="0 1 0" range="0 1.3"/>
+                            <geom name="finger2_truss_geom" type="mesh" mesh="truss_arm" material="light_grey"/>
+                            
+                            <!-- Finger tip - mirrored -->
+                            <body name="finger2_finger_tip" pos="-0.0256 0 0.04868" euler="0 0.772 0">
+                                <inertial pos="0 0 0.01" mass="0.01" diaginertia="0.00001 0.00001 0.00001"/>
+                                <joint name="finger2_tip_joint" type="hinge" axis="0 -1 0" range="-1.3 0"/>
+                                <geom name="finger2_tip_geom" type="mesh" mesh="finger_tip" material="light_grey"/>
+                                
+                                <!-- Flex finger (fixed to tip) -->
+                                <body name="finger2_flex_finger" pos="0.03059 0 0.0172">
+                                    <geom name="finger2_flex_geom" type="mesh" mesh="flex_finger" material="dark_grey"/>
+                                    <!-- Contact site for grasping -->
+                                    <site name="finger2_contact" pos="0 0 0.02" size="0.005"/>
+                                </body>
+                            </body>
+                        </body>
+                    </body>
+                    
+                    <!-- Grasp frame (reference point between fingers) -->
+                    <site name="grasp_frame" pos="0 0 0.14" size="0.01" rgba="1 0 0 0.5"/>
+                    
+                </body>
+            </body>
+        </body>
+        
+        <!-- Test object to grasp -->
+        <body name="object" pos="0 0.15 0.05">
+            <freejoint name="object_free"/>
+            <geom name="object_geom" type="box" size="0.02 0.02 0.02" 
+                  rgba="0.2 0.8 0.2 1" mass="0.05"/>
+        </body>
+    </worldbody>
+    
+    <!-- 
+        EQUALITY CONSTRAINTS
+        These implement the four-bar linkage mechanism:
+        - Finger 2 mirrors Finger 1 (gripper_mirror_joint = gripper_joint)
+        - Truss arms move with moment arms
+        - Finger tips counter-rotate to stay parallel
+    -->
+    <equality>
+        <!-- Mirror joint: finger 2 follows finger 1 -->
+        <joint joint1="gripper_joint" joint2="gripper_mirror_joint" polycoef="0 1 0 0 0"/>
+        
+        <!-- Finger 1 linkage: truss follows moment arm -->
+        <joint joint1="gripper_joint" joint2="finger1_truss_joint" polycoef="0 1 0 0 0"/>
+        
+        <!-- Finger 1 linkage: tip counter-rotates (note: negative coefficient due to opposite axis) -->
+        <joint joint1="gripper_joint" joint2="finger1_tip_joint" polycoef="0 -1 0 0 0"/>
+        
+        <!-- Finger 2 linkage: truss follows moment arm -->
+        <joint joint1="gripper_mirror_joint" joint2="finger2_truss_joint" polycoef="0 1 0 0 0"/>
+        
+        <!-- Finger 2 linkage: tip counter-rotates -->
+        <joint joint1="gripper_mirror_joint" joint2="finger2_tip_joint" polycoef="0 -1 0 0 0"/>
+    </equality>
+    
+    <!-- 
+        ACTUATOR
+        Single position-controlled actuator for the gripper
+        ctrlrange: 0 (closed) to 1.0 (open, normalized)
+    -->
+    <actuator>
+        <position name="gripper_ctrl" joint="gripper_joint" kp="100" 
+                  ctrlrange="0 1.3" forcerange="-40 40"/>
+    </actuator>
+    
+    <!-- SENSORS -->
+    <sensor>
+        <jointpos name="gripper_pos" joint="gripper_joint"/>
+        <touch name="finger1_touch" site="finger1_contact"/>
+        <touch name="finger2_touch" site="finger2_contact"/>
+    </sensor>
+    
+    <!-- Initial configuration: gripper slightly open -->
+    <keyframe>
+        <key name="home" qpos="0.3 0.3 0 0.3 0.3 0 0 0.15 0.05 1 0 0 0"/>
+    </keyframe>
+    
+</mujoco>

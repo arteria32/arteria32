@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mujoco model="gripper">
+    <compiler angle="radian" meshdir="meshes"/>
+    
+    <asset>
+        <!-- Gripper mesh assets -->
+        <mesh name="demo_gripper_left" file="demo_gripper_left.stl"/>
+        <mesh name="demo_gripper_right" file="demo_gripper_right.stl"/>
+    </asset>
+    
+    <worldbody>
+        <!-- Ground plane -->
+        <geom type="plane" size="1 1 0.1" rgba="0.8 0.8 0.8 1"/>
+        
+        <!-- Robot arm base (simplified) -->
+        <body name="arm_base" pos="0 0 0.5">
+            <geom type="cylinder" size="0.05 0.2" rgba="0.5 0.5 0.5 1"/>
+            
+            <!-- Gripper base -->
+            <body name="gripper_base" pos="0 0 0.25">
+                <geom type="box" size="0.02 0.05 0.02" rgba="0.3 0.3 0.3 1"/>
+                
+                <!-- Left gripper finger -->
+                <body name="gripper_left" pos="-0.03 0 0">
+                    <joint name="finger_left" type="slide" axis="1 0 0" 
+                           range="-0.05 0.05" damping="10"/>
+                    <geom type="mesh" mesh="demo_gripper_left" rgba="0.8 0.2 0.2 1"/>
+                </body>
+                
+                <!-- Right gripper finger -->
+                <body name="gripper_right" pos="0.03 0 0">
+                    <joint name="finger_right" type="slide" axis="1 0 0" 
+                           range="-0.05 0.05" damping="10"/>
+                    <geom type="mesh" mesh="demo_gripper_right" rgba="0.2 0.2 0.8 1"/>
+                </body>
+            </body>
+        </body>
+    </worldbody>
+    
+    <actuator>
+        <!-- Position control for gripper fingers -->
+        <position name="left_finger_ctrl" joint="finger_left" kp="100"/>
+        <position name="right_finger_ctrl" joint="finger_right" kp="100"/>
+    </actuator>
+    
+    <equality>
+        <!-- Optional: Couple the fingers to move together (symmetric gripper) -->
+        <!-- Uncomment to make fingers mirror each other -->
+        <!-- <joint joint1="finger_left" joint2="finger_right" polycoef="0 -1 0 0 0"/> -->
+    </equality>
+</mujoco>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Example MuJoCo XML for a Two-Finger Gripper
+    
+    This shows how to set up split gripper STL files as separate joints.
+    Each finger can move independently, allowing for grasping simulation.
+    
+    Key concepts:
+    - Each gripper part is a separate <body> with its own <joint>
+    - Use 'slide' joints for linear gripper motion, 'hinge' for rotational
+    - The mesh files are referenced in the <asset> section
+    - Actuators control the joints
+-->
+<mujoco model="two_finger_gripper">
+    
+    <!-- Compiler settings -->
+    <compiler angle="radian" meshdir="meshes"/>
+    
+    <!-- Simulation options -->
+    <option timestep="0.002" gravity="0 0 -9.81"/>
+    
+    <!-- Visual settings -->
+    <visual>
+        <rgba haze="0.15 0.25 0.35 1"/>
+    </visual>
+    
+    <!-- Assets: meshes, textures, materials -->
+    <asset>
+        <!-- 
+            Replace these with your split STL files:
+            - gripper_left.stl  (left finger mesh)
+            - gripper_right.stl (right finger mesh)
+        -->
+        <mesh name="gripper_left" file="gripper_left.stl"/>
+        <mesh name="gripper_right" file="gripper_right.stl"/>
+        
+        <!-- Materials for visualization -->
+        <material name="finger_left_mat" rgba="0.8 0.2 0.2 1"/>
+        <material name="finger_right_mat" rgba="0.2 0.2 0.8 1"/>
+        <material name="base_mat" rgba="0.4 0.4 0.4 1"/>
+    </asset>
+    
+    <!-- World definition -->
+    <worldbody>
+        <!-- Ground plane -->
+        <geom name="floor" type="plane" size="1 1 0.1" rgba="0.9 0.9 0.9 1"/>
+        
+        <!-- Light -->
+        <light pos="0 0 2" dir="0 0 -1" diffuse="1 1 1"/>
+        
+        <!-- Gripper Assembly -->
+        <body name="gripper_base" pos="0 0 0.3">
+            <!-- Base that connects to robot arm -->
+            <geom name="base_geom" type="box" size="0.04 0.02 0.02" 
+                  material="base_mat"/>
+            
+            <!-- 
+                LEFT FINGER
+                - Separate body with its own joint
+                - Joint type depends on gripper mechanism:
+                  * 'slide' for parallel jaw grippers
+                  * 'hinge' for angular/pinch grippers
+            -->
+            <body name="finger_left" pos="-0.02 0 -0.02">
+                <!-- 
+                    SLIDE JOINT: Linear motion along X-axis
+                    - axis="1 0 0" means movement along X
+                    - range: min/max displacement from initial position
+                    - damping: resistance to motion
+                -->
+                <joint name="joint_finger_left" 
+                       type="slide" 
+                       axis="1 0 0" 
+                       range="-0.02 0.02"
+                       damping="5"
+                       armature="0.01"/>
+                
+                <!-- 
+                    The mesh geometry
+                    - Adjust pos/euler to align mesh properly
+                    - You may need to scale or rotate depending on your STL
+                -->
+                <geom name="geom_finger_left" 
+                      type="mesh" 
+                      mesh="gripper_left"
+                      material="finger_left_mat"
+                      pos="0 0 0"
+                      euler="0 0 0"/>
+                
+                <!-- Contact point (optional, for better grasping) -->
+                <site name="contact_left" pos="0 0 -0.04" size="0.005"/>
+            </body>
+            
+            <!-- 
+                RIGHT FINGER
+                - Mirror of left finger
+                - Same joint setup
+            -->
+            <body name="finger_right" pos="0.02 0 -0.02">
+                <joint name="joint_finger_right" 
+                       type="slide" 
+                       axis="1 0 0" 
+                       range="-0.02 0.02"
+                       damping="5"
+                       armature="0.01"/>
+                
+                <geom name="geom_finger_right" 
+                      type="mesh" 
+                      mesh="gripper_right"
+                      material="finger_right_mat"
+                      pos="0 0 0"
+                      euler="0 0 0"/>
+                
+                <site name="contact_right" pos="0 0 -0.04" size="0.005"/>
+            </body>
+        </body>
+        
+        <!-- Test object to grasp -->
+        <body name="object" pos="0 0.1 0.1">
+            <freejoint name="object_joint"/>
+            <geom name="object_geom" type="box" size="0.02 0.02 0.02" 
+                  rgba="0.2 0.8 0.2 1" mass="0.1"/>
+        </body>
+    </worldbody>
+    
+    <!-- 
+        ACTUATORS
+        Control the finger joints
+    -->
+    <actuator>
+        <!-- Position control - specify target position -->
+        <position name="ctrl_finger_left" 
+                  joint="joint_finger_left" 
+                  kp="100"
+                  ctrlrange="-0.02 0.02"/>
+        
+        <position name="ctrl_finger_right" 
+                  joint="joint_finger_right" 
+                  kp="100"
+                  ctrlrange="-0.02 0.02"/>
+    </actuator>
+    
+    <!-- 
+        EQUALITY CONSTRAINTS (optional)
+        Use these to couple finger motion
+    -->
+    <equality>
+        <!-- 
+            Symmetric gripper: fingers move in opposite directions
+            Uncomment to enable:
+        -->
+        <!-- <joint joint1="joint_finger_left" joint2="joint_finger_right" 
+                    polycoef="0 -1 0 0 0"/> -->
+    </equality>
+    
+    <!-- 
+        SENSORS (optional)
+        Add sensors for feedback
+    -->
+    <sensor>
+        <!-- Joint position sensors -->
+        <jointpos name="pos_finger_left" joint="joint_finger_left"/>
+        <jointpos name="pos_finger_right" joint="joint_finger_right"/>
+        
+        <!-- Touch sensors at fingertips -->
+        <touch name="touch_left" site="contact_left"/>
+        <touch name="touch_right" site="contact_right"/>
+    </sensor>
+    
+</mujoco>
