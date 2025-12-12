@@ -22,11 +22,13 @@ import time
 
 
 def main():
-    # Find model - prefer fixed version
+    # Find model - prefer V2 (correct orientation)
     script_dir = Path(__file__).parent
     
-    # Try fixed version first, then standalone, then original
-    xml_path = script_dir / "rg2_gripper_fixed.xml"
+    # Try V2 first (correct orientation), then fixed, then others
+    xml_path = script_dir / "rg2_gripper_v2.xml"
+    if not xml_path.exists():
+        xml_path = script_dir / "rg2_gripper_fixed.xml"
     if not xml_path.exists():
         xml_path = script_dir / "rg2_gripper.xml"
     if not xml_path.exists():
