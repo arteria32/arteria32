@@ -1,0 +1,84 @@
+<mujocoinclude>
+  <!-- Attach this body under your robot wrist/end-effector body -->
+  <body name="rg2">
+    <!-- bracket (link: gripper_bracket) -->
+    <geom class="visual" mesh="rg2_single_bracket"/>
+    <inertial pos="0 0 0" mass="0.09" diaginertia="0.001 0.001 0.001"/>
+
+    <!-- body (link: gripper_body), fixed joint at origin[single_bracket] -->
+    <body name="rg2_body" pos="0 0 0.05">
+      <geom class="visual" mesh="rg2_body" rgba="0.85 0.85 0.85 1"/>
+      <inertial pos="0 0 0" mass="0.65" diaginertia="0.001 0.001 0.001"/>
+
+      <!-- grasp frame -->
+      <site name="rg2_grasp_frame" pos="0 0 0.14" size="0.005" rgba="1 0 0 1"/>
+
+      <!-- Finger 1 (master) -->
+      <body name="rg2_finger_1_origin" euler="0 0 0">
+        <inertial pos="0 0 0" mass="0.001" diaginertia="1e-6 1e-6 1e-6"/>
+
+        <body name="rg2_finger_1_moment_arm" pos="-0.017 0 0.055" euler="0 -0.772 0">
+          <joint name="rg2_gripper_joint" type="hinge" axis="0 1 0" range="0 1.3"
+                 damping="0.4" armature="0.02" frictionloss="0.02"/>
+          <geom class="visual" mesh="rg2_moment_arm"/>
+          <inertial pos="0 0 0" mass="0.001" diaginertia="1e-6 1e-6 1e-6"/>
+        </body>
+
+        <body name="rg2_finger_1_truss_arm" pos="-0.0075 0 0.0715" euler="0 -0.772 0">
+          <joint name="rg2_finger_1_truss_arm_joint" type="hinge" axis="0 1 0" range="0 1.3"
+                 damping="0.3" armature="0.01" frictionloss="0.01"/>
+          <geom class="visual" mesh="rg2_truss_arm"/>
+          <inertial pos="0 0 0" mass="0.001" diaginertia="1e-6 1e-6 1e-6"/>
+
+          <body name="rg2_finger_1_finger_tip" pos="-0.0256 0 0.04868" euler="0 0.772 0">
+            <joint name="rg2_finger_1_finger_tip_joint" type="hinge" axis="0 -1 0" range="0 1.3"
+                   damping="0.25" armature="0.01" frictionloss="0.01"/>
+            <geom class="visual" mesh="rg2_finger_tip"/>
+            <inertial pos="0 0 0" mass="0.001" diaginertia="1e-6 1e-6 1e-6"/>
+
+            <body name="rg2_finger_1_flex_finger" pos="0.03059 0 0.0172">
+              <geom class="visual" mesh="rg2_flex_finger" rgba="0.25 0.25 0.25 1"/>
+              <inertial pos="0 0 0" mass="0.001" diaginertia="1e-6 1e-6 1e-6"/>
+              <geom class="collision" size="0.006 0.010 0.018" pos="-0.012 0 0.015"/>
+            </body>
+          </body>
+        </body>
+      </body>
+
+      <!-- Finger 2 (mirror): yaw pi -->
+      <body name="rg2_finger_2_origin" euler="0 0 3.141592653589793">
+        <inertial pos="0 0 0" mass="0.001" diaginertia="1e-6 1e-6 1e-6"/>
+
+        <body name="rg2_finger_2_moment_arm" pos="-0.017 0 0.055" euler="0 -0.772 0">
+          <joint name="rg2_gripper_mirror_joint" type="hinge" axis="0 1 0" range="0 1.3"
+                 damping="0.4" armature="0.02" frictionloss="0.02"/>
+          <geom class="visual" mesh="rg2_moment_arm"/>
+          <inertial pos="0 0 0" mass="0.001" diaginertia="1e-6 1e-6 1e-6"/>
+        </body>
+
+        <body name="rg2_finger_2_truss_arm" pos="-0.0075 0 0.0715" euler="0 -0.772 0">
+          <joint name="rg2_finger_2_truss_arm_joint" type="hinge" axis="0 1 0" range="0 1.3"
+                 damping="0.3" armature="0.01" frictionloss="0.01"/>
+          <geom class="visual" mesh="rg2_truss_arm"/>
+          <inertial pos="0 0 0" mass="0.001" diaginertia="1e-6 1e-6 1e-6"/>
+
+          <body name="rg2_finger_2_finger_tip" pos="-0.0256 0 0.04868" euler="0 0.772 0">
+            <joint name="rg2_finger_2_finger_tip_joint" type="hinge" axis="0 -1 0" range="0 1.3"
+                   damping="0.25" armature="0.01" frictionloss="0.01"/>
+            <geom class="visual" mesh="rg2_finger_tip"/>
+            <inertial pos="0 0 0" mass="0.001" diaginertia="1e-6 1e-6 1e-6"/>
+
+            <body name="rg2_finger_2_flex_finger" pos="0.03059 0 0.0172">
+              <geom class="visual" mesh="rg2_flex_finger" rgba="0.25 0.25 0.25 1"/>
+              <inertial pos="0 0 0" mass="0.001" diaginertia="1e-6 1e-6 1e-6"/>
+              <geom class="collision" size="0.006 0.010 0.018" pos="-0.012 0 0.015"/>
+            </body>
+          </body>
+        </body>
+      </body>
+
+      <!-- collision proxy for the main body (tune as needed) -->
+      <geom class="collision" size="0.028 0.028 0.035" pos="-0.008 0 0.055"/>
+    </body>
+  </body>
+</mujocoinclude>
