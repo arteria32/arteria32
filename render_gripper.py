@@ -28,13 +28,13 @@ def main():
                         help='Output filename')
     args = parser.parse_args()
     
-    # Find model file - prefer V2 (correct orientation)
+    # Find model file - prefer V5 (correct linkage)
     script_dir = Path(__file__).parent
     
-    # Try V2 first (correct orientation)
-    xml_path = script_dir / "rg2_gripper_v2.xml"
+    # Try V5 first (correct four-bar linkage)
+    xml_path = script_dir / "rg2_gripper_v5.xml"
     if not xml_path.exists():
-        xml_path = script_dir / "rg2_gripper_fixed.xml"
+        xml_path = script_dir / "rg2_gripper_v2.xml"
     if not xml_path.exists():
         xml_path = script_dir / "rg2_gripper.xml"
     if not xml_path.exists():
