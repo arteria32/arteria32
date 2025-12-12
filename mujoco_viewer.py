@@ -22,13 +22,13 @@ import time
 
 
 def main():
-    # Find model - prefer V5 (correct linkage)
+    # Find model - prefer final version
     script_dir = Path(__file__).parent
     
-    # Try V5 first (correct four-bar linkage)
-    xml_path = script_dir / "rg2_gripper_v5.xml"
+    # Try final version first (correct positions)
+    xml_path = script_dir / "rg2_gripper_final.xml"
     if not xml_path.exists():
-        xml_path = script_dir / "rg2_gripper_v2.xml"
+        xml_path = script_dir / "rg2_gripper_v5.xml"
     if not xml_path.exists():
         xml_path = script_dir / "rg2_gripper.xml"
     if not xml_path.exists():
