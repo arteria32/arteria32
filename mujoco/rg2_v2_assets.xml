@@ -1,0 +1,15 @@
+<mujocoinclude>
+  <default>
+    <default class="visual">
+      <geom type="mesh" contype="0" conaffinity="0" group="2" rgba="0.75 0.75 0.75 1"/>
+    </default>
+    <default class="collision">
+      <geom type="box" group="3" rgba="0.2 0.6 0.2 0.15"/>
+    </default>
+  </default>
+
+  <asset>
+    <!-- Official RG2 v2 mesh you added. If it looks 1000x too big, remove scale. -->
+    <mesh name="rg2_v2_mesh" file="RG2_v2.stl" scale="0.001 0.001 0.001"/>
+  </asset>
+</mujocoinclude>
