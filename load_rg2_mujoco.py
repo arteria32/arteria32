@@ -11,11 +11,22 @@ Usage:
     python load_rg2_mujoco.py --convert    # Convert xacro to URDF
 """
 
+import os
+import sys
+
+# Set MuJoCo GL backend BEFORE importing mujoco
+# Options: 'egl' (GPU), 'osmesa' (software), 'glfw' (display)
+if 'MUJOCO_GL' not in os.environ:
+    # Try to auto-detect the best backend
+    if os.environ.get('DISPLAY'):
+        os.environ['MUJOCO_GL'] = 'glfw'  # Has display
+    else:
+        os.environ['MUJOCO_GL'] = 'osmesa'  # Headless
+
 import argparse
 import numpy as np
 from pathlib import Path
 import subprocess
-import sys
 
 
 def install_mujoco():
