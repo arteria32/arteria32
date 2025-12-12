@@ -28,12 +28,17 @@ def main():
                         help='Output filename')
     args = parser.parse_args()
     
-    # Find model file
+    # Find model file - prefer standalone version
     script_dir = Path(__file__).parent
-    xml_path = script_dir / "onrobot_rg2_mujoco.xml"
+    
+    # Try standalone version first (has local meshes)
+    xml_path = script_dir / "rg2_gripper.xml"
+    if not xml_path.exists():
+        xml_path = script_dir / "onrobot_rg2_mujoco.xml"
     
     if not xml_path.exists():
-        print(f"Error: Model not found at {xml_path}")
+        print(f"Error: Model not found!")
+        print("Run: python3 setup_gripper.py")
         return
     
     print(f"Loading: {xml_path}")
