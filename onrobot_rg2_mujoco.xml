@@ -22,10 +22,15 @@
     
     <option timestep="0.002" gravity="0 0 -9.81" integrator="implicit"/>
     
+    <visual>
+        <global offwidth="1280" offheight="960"/>
+        <quality shadowsize="4096"/>
+    </visual>
+    
     <default>
         <joint damping="0.5" armature="0.01"/>
         <geom contype="1" conaffinity="1" friction="1 0.005 0.0001"/>
-        <mesh scale="0.001 0.001 0.001"/>  <!-- STL files are in mm, convert to meters -->
+        <!-- STL files are already in meters, no scaling needed -->
     </default>
     
     <asset>
