@@ -22,11 +22,13 @@ import time
 
 
 def main():
-    # Find model
+    # Find model - prefer fixed version
     script_dir = Path(__file__).parent
     
-    # Try standalone version first
-    xml_path = script_dir / "rg2_gripper.xml"
+    # Try fixed version first, then standalone, then original
+    xml_path = script_dir / "rg2_gripper_fixed.xml"
+    if not xml_path.exists():
+        xml_path = script_dir / "rg2_gripper.xml"
     if not xml_path.exists():
         xml_path = script_dir / "onrobot_rg2_mujoco.xml"
     

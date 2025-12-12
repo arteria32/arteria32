@@ -28,11 +28,13 @@ def main():
                         help='Output filename')
     args = parser.parse_args()
     
-    # Find model file - prefer standalone version
+    # Find model file - prefer fixed version
     script_dir = Path(__file__).parent
     
-    # Try standalone version first (has local meshes)
-    xml_path = script_dir / "rg2_gripper.xml"
+    # Try fixed version first (correct kinematics)
+    xml_path = script_dir / "rg2_gripper_fixed.xml"
+    if not xml_path.exists():
+        xml_path = script_dir / "rg2_gripper.xml"
     if not xml_path.exists():
         xml_path = script_dir / "onrobot_rg2_mujoco.xml"
     
