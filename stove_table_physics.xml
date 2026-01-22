@@ -1,0 +1,101 @@
+<mujoco model="stove_table_physics">
+  <!--
+    Goal:
+    - Wooden table (fixed), portable stove base (movable), knob (hinge on stove).
+    - Realistic friction + stable contact solver settings.
+    - Contact filtering with contype/conaffinity:
+        TABLE = 1, STOVE = 2, MANIP = 4
+      Table only contacts stove (no knob-table collisions by default).
+  -->
+
+  <compiler angle="radian" inertiafromgeom="false"/>
+
+  <option timestep="0.002" gravity="0 0 -9.81" impratio="1"/>
+
+  <default>
+    <!-- Reasonable "hard-ish" contact (stable for tabletop manipulation). -->
+    <geom solref="0.005 1" solimp="0.95 0.99 0.001 0.5 2" condim="4"/>
+  </default>
+
+  <asset>
+    <!-- Update file paths to your actual mesh files. -->
+    <mesh name="easy_stove1" file="easy_stove1.stl"/>
+    <mesh name="easy_stove2" file="easy_stove2.stl"/>
+  </asset>
+
+  <worldbody>
+    <!-- Fixed wooden table -->
+    <body name="table_1" pos="0 1.0 0.275">
+      <geom
+        name="table_1"
+        type="box"
+        size="1.765 0.475 0.475"
+        rgba="0.55 0.36 0.22 1"
+        friction="0.60 0.005 0.0001"
+        contype="1"
+        conaffinity="2"/>
+    </body>
+
+    <!-- Movable stove base -->
+    <body name="easy_stove1" pos="0.5 0.75 0.79" quat="0.5 0.5 -0.5 -0.5">
+      <!-- Needed so the stove can slide/translate/rotate on the table. -->
+      <freejoint name="easy_stove_free"/>
+
+      <!-- Stove mass in requested range (0.5-3kg). -->
+      <inertial pos="0 0 0" mass="1.50" diaginertia="0.0055 0.0117 0.0163"/>
+
+      <!-- Contact-enabled stove collision mesh (you can replace with simpler collision geoms if preferred). -->
+      <geom
+        name="easy_stove1"
+        type="mesh"
+        mesh="easy_stove1"
+        friction="0.50 0.005 0.0001"
+        contype="2"
+        conaffinity="1"/>
+
+      <!-- Knob attached to the stove (forces on knob transmit to stove through the joint reaction). -->
+      <body name="easy_stove2" pos="0 0 0" quat="1 0 0 0">
+        <joint
+          name="easy_stove_joint0"
+          pos="0.113 0.015 0"
+          axis="0.866 0.5 0"
+          damping="0.002"
+          type="hinge"
+          limited="true"
+          range="0 1.575"/>
+
+        <inertial pos="0.113 0.015 0" mass="0.05" diaginertia="0.000007 0.000007 0.000010"/>
+
+        <!-- Visual mesh only (no contact) to avoid self-collisions with the stove. -->
+        <geom name="easy_stove2" type="mesh" mesh="easy_stove2" contype="0" conaffinity="0"/>
+
+        <!-- Optional: knob collision proxies for manipulation.
+             By default they don't collide with the table or stove (conaffinity=0),
+             but you can make a "hand/gripper" geom collide by giving it conaffinity=4 and contype!=0. -->
+        <geom
+          name="easy_stove2_geom1"
+          type="cylinder"
+          size="0.0225 0.006"
+          pos="0.121 0.0185 0"
+          euler="-1.57 1.047 0"
+          rgba="0 1 0 0.35"
+          group="5"
+          friction="0.80 0.003 0.0001"
+          contype="4"
+          conaffinity="0"/>
+        <geom
+          name="easy_stove2_geom2"
+          type="box"
+          size="0.0045 0.02 0.005"
+          pos="0.1275 0.024 0"
+          euler="-1.57 1.047 0"
+          rgba="0 0 1 0.35"
+          group="5"
+          friction="0.80 0.003 0.0001"
+          contype="4"
+          conaffinity="0"/>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>
+

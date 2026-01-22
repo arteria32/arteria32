@@ -38,3 +38,20 @@ Hello, I'm Denis Ryabko
    <img src="https://github.com/devicons/devicon/blob/master/icons/python/python-original.svg" title="Python" alt="Python" width="40" height="40"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/git/git-original-wordmark.svg" title="Git" **alt="Git" width="40" height="40"/>
 </div>
+
+<hr>
+
+## MuJoCo tabletop stove contact physics example
+
+This repo includes `stove_table_physics.xml`, a minimal example showing:
+
+- A **wooden table** (fixed)
+- A **movable portable stove** (free joint, mass \(=1.5\) kg, realistic friction)
+- A **knob** mounted on the stove via a hinge joint (forces/torques applied to the knob transmit to the stove)
+
+Contact filtering uses a simple bitmask scheme:
+
+- Table geom: `contype=1`, `conaffinity=2`
+- Stove base geom: `contype=2`, `conaffinity=1`
+- Knob collision proxies: `contype=4`, `conaffinity=0` (disabled by default; enable by setting your gripper/hand geom `conaffinity` to include bit `4` and `contype!=0`)
+
