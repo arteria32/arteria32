@@ -38,3 +38,10 @@ Hello, I'm Denis Ryabko
    <img src="https://github.com/devicons/devicon/blob/master/icons/python/python-original.svg" title="Python" alt="Python" width="40" height="40"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/git/git-original-wordmark.svg" title="Git" **alt="Git" width="40" height="40"/>
 </div>
+
+---
+
+## Wedding design mockups (Milk Gallery / Jil Sander vibe)
+
+- `assets/milk-gallery-layout.png` — overall layout + hero zones
+- `assets/milk-gallery-table-detail.png` — table decor rhythm close-up

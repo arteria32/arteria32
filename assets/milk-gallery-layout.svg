@@ -1,0 +1,184 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <style>
+      .bg { fill:#f6f4ef; }
+      .panel { fill:#fffdf8; stroke:#bfb8aa; stroke-width:3; }
+      .muted { fill:#5a5a5a; font-family: Inter, Arial, sans-serif; }
+      .title { fill:#1f1f1f; font-family: Inter, Arial, sans-serif; font-size:34px; font-weight:600; }
+      .label { fill:#2a2a2a; font-family: Inter, Arial, sans-serif; font-size:18px; font-weight:600; }
+      .note { fill:#4a4a4a; font-family: Inter, Arial, sans-serif; font-size:16px; }
+      .chair { fill:#2e2e2e; opacity:0.86; }
+      .dash { stroke:#c7c1b5; stroke-width:3; stroke-dasharray:8 10; }
+      .vase { fill:#ded8cd; stroke:#a8a196; stroke-width:1.6; }
+      .stem { stroke:#2f2f2f; stroke-width:2.2; stroke-linecap:round; }
+      .calla { fill:#f7f3ea; stroke:#bfb8aa; stroke-width:1.2; }
+      .steel { fill:#c8c8c8; }
+    </style>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="900" class="bg"/>
+
+  <!-- Header -->
+  <text x="60" y="88" class="title">Milk Gallery - Jil Sander mood (1 long table, ~30 guests)</text>
+  <text x="60" y="124" class="note">Key: negative space, perfect linen, rhythmic bud vases + slim candles, matte steel, warm 2700-3000K light.</text>
+
+  <!-- Room boundary -->
+  <rect x="40" y="160" width="1520" height="700" rx="18" fill="none" stroke="#cfcac0" stroke-width="3"/>
+  <text x="60" y="198" class="muted" font-size="16">Diagram (not to scale): zones and decor rhythm</text>
+
+  <!-- Long table -->
+  <rect x="210" y="330" width="1180" height="240" rx="12" class="panel" filter="url(#shadow)"/>
+  <text x="750" y="318" class="label">Long banquet table</text>
+
+  <!-- Chairs: 15 top, 15 bottom -->
+  <g class="chair">
+    <!-- top row -->
+    <g>
+      <rect x="240" y="285" width="48" height="34" rx="7"/>
+      <rect x="315" y="285" width="48" height="34" rx="7"/>
+      <rect x="390" y="285" width="48" height="34" rx="7"/>
+      <rect x="465" y="285" width="48" height="34" rx="7"/>
+      <rect x="540" y="285" width="48" height="34" rx="7"/>
+      <rect x="615" y="285" width="48" height="34" rx="7"/>
+      <rect x="690" y="285" width="48" height="34" rx="7"/>
+      <rect x="765" y="285" width="48" height="34" rx="7"/>
+      <rect x="840" y="285" width="48" height="34" rx="7"/>
+      <rect x="915" y="285" width="48" height="34" rx="7"/>
+      <rect x="990" y="285" width="48" height="34" rx="7"/>
+      <rect x="1065" y="285" width="48" height="34" rx="7"/>
+      <rect x="1140" y="285" width="48" height="34" rx="7"/>
+      <rect x="1215" y="285" width="48" height="34" rx="7"/>
+      <rect x="1290" y="285" width="48" height="34" rx="7"/>
+    </g>
+    <!-- bottom row -->
+    <g>
+      <rect x="240" y="584" width="48" height="34" rx="7"/>
+      <rect x="315" y="584" width="48" height="34" rx="7"/>
+      <rect x="390" y="584" width="48" height="34" rx="7"/>
+      <rect x="465" y="584" width="48" height="34" rx="7"/>
+      <rect x="540" y="584" width="48" height="34" rx="7"/>
+      <rect x="615" y="584" width="48" height="34" rx="7"/>
+      <rect x="690" y="584" width="48" height="34" rx="7"/>
+      <rect x="765" y="584" width="48" height="34" rx="7"/>
+      <rect x="840" y="584" width="48" height="34" rx="7"/>
+      <rect x="915" y="584" width="48" height="34" rx="7"/>
+      <rect x="990" y="584" width="48" height="34" rx="7"/>
+      <rect x="1065" y="584" width="48" height="34" rx="7"/>
+      <rect x="1140" y="584" width="48" height="34" rx="7"/>
+      <rect x="1215" y="584" width="48" height="34" rx="7"/>
+      <rect x="1290" y="584" width="48" height="34" rx="7"/>
+    </g>
+  </g>
+
+  <!-- Centerline decor -->
+  <line x1="260" y1="450" x2="1340" y2="450" class="dash"/>
+  <text x="640" y="476" class="note">Rhythm: bud vases (calla) + slim candles (all identical)</text>
+
+  <!-- Bud vases (18) + calla -->
+  <g>
+    <!-- vases -->
+    <g class="vase">
+      <rect x="270" y="418" width="22" height="56" rx="7"/>
+      <rect x="332" y="418" width="22" height="56" rx="7"/>
+      <rect x="394" y="418" width="22" height="56" rx="7"/>
+      <rect x="456" y="418" width="22" height="56" rx="7"/>
+      <rect x="518" y="418" width="22" height="56" rx="7"/>
+      <rect x="580" y="418" width="22" height="56" rx="7"/>
+      <rect x="642" y="418" width="22" height="56" rx="7"/>
+      <rect x="704" y="418" width="22" height="56" rx="7"/>
+      <rect x="766" y="418" width="22" height="56" rx="7"/>
+      <rect x="828" y="418" width="22" height="56" rx="7"/>
+      <rect x="890" y="418" width="22" height="56" rx="7"/>
+      <rect x="952" y="418" width="22" height="56" rx="7"/>
+      <rect x="1014" y="418" width="22" height="56" rx="7"/>
+      <rect x="1076" y="418" width="22" height="56" rx="7"/>
+      <rect x="1138" y="418" width="22" height="56" rx="7"/>
+      <rect x="1200" y="418" width="22" height="56" rx="7"/>
+      <rect x="1262" y="418" width="22" height="56" rx="7"/>
+      <rect x="1324" y="418" width="22" height="56" rx="7"/>
+    </g>
+    <!-- stems -->
+    <g class="stem">
+      <line x1="281" y1="416" x2="281" y2="378"/>
+      <line x1="343" y1="416" x2="343" y2="374"/>
+      <line x1="405" y1="416" x2="405" y2="380"/>
+      <line x1="467" y1="416" x2="467" y2="372"/>
+      <line x1="529" y1="416" x2="529" y2="380"/>
+      <line x1="591" y1="416" x2="591" y2="375"/>
+      <line x1="653" y1="416" x2="653" y2="379"/>
+      <line x1="715" y1="416" x2="715" y2="373"/>
+      <line x1="777" y1="416" x2="777" y2="380"/>
+      <line x1="839" y1="416" x2="839" y2="374"/>
+      <line x1="901" y1="416" x2="901" y2="379"/>
+      <line x1="963" y1="416" x2="963" y2="373"/>
+      <line x1="1025" y1="416" x2="1025" y2="380"/>
+      <line x1="1087" y1="416" x2="1087" y2="374"/>
+      <line x1="1149" y1="416" x2="1149" y2="379"/>
+      <line x1="1211" y1="416" x2="1211" y2="373"/>
+      <line x1="1273" y1="416" x2="1273" y2="380"/>
+      <line x1="1335" y1="416" x2="1335" y2="374"/>
+    </g>
+    <!-- calla heads -->
+    <g class="calla">
+      <ellipse cx="281" cy="366" rx="11" ry="8"/>
+      <ellipse cx="343" cy="363" rx="11" ry="8"/>
+      <ellipse cx="405" cy="369" rx="11" ry="8"/>
+      <ellipse cx="467" cy="361" rx="11" ry="8"/>
+      <ellipse cx="529" cy="369" rx="11" ry="8"/>
+      <ellipse cx="591" cy="364" rx="11" ry="8"/>
+      <ellipse cx="653" cy="368" rx="11" ry="8"/>
+      <ellipse cx="715" cy="362" rx="11" ry="8"/>
+      <ellipse cx="777" cy="369" rx="11" ry="8"/>
+      <ellipse cx="839" cy="363" rx="11" ry="8"/>
+      <ellipse cx="901" cy="368" rx="11" ry="8"/>
+      <ellipse cx="963" cy="362" rx="11" ry="8"/>
+      <ellipse cx="1025" cy="369" rx="11" ry="8"/>
+      <ellipse cx="1087" cy="363" rx="11" ry="8"/>
+      <ellipse cx="1149" cy="368" rx="11" ry="8"/>
+      <ellipse cx="1211" cy="362" rx="11" ry="8"/>
+      <ellipse cx="1273" cy="369" rx="11" ry="8"/>
+      <ellipse cx="1335" cy="363" rx="11" ry="8"/>
+    </g>
+  </g>
+
+  <!-- Candles (simple dots to show density) -->
+  <g fill="#e8e1d4" stroke="#bfb8aa" stroke-width="1.2">
+    <circle cx="306" cy="450" r="6"/>
+    <circle cx="368" cy="450" r="6"/>
+    <circle cx="430" cy="450" r="6"/>
+    <circle cx="492" cy="450" r="6"/>
+    <circle cx="554" cy="450" r="6"/>
+    <circle cx="616" cy="450" r="6"/>
+    <circle cx="678" cy="450" r="6"/>
+    <circle cx="740" cy="450" r="6"/>
+    <circle cx="802" cy="450" r="6"/>
+    <circle cx="864" cy="450" r="6"/>
+    <circle cx="926" cy="450" r="6"/>
+    <circle cx="988" cy="450" r="6"/>
+    <circle cx="1050" cy="450" r="6"/>
+    <circle cx="1112" cy="450" r="6"/>
+    <circle cx="1174" cy="450" r="6"/>
+    <circle cx="1236" cy="450" r="6"/>
+    <circle cx="1298" cy="450" r="6"/>
+  </g>
+
+  <!-- Welcome panel -->
+  <rect x="70" y="655" width="300" height="155" rx="12" class="panel" filter="url(#shadow)"/>
+  <text x="95" y="700" class="label">WELCOME / SEATING</text>
+  <text x="95" y="733" class="note">Matte ivory panel</text>
+  <text x="95" y="758" class="note">Minimal typography: names + date</text>
+  <text x="95" y="783" class="note">Light: one narrow spotlight</text>
+
+  <!-- Steel accent legend -->
+  <rect x="1230" y="655" width="320" height="155" rx="12" class="panel" filter="url(#shadow)"/>
+  <text x="1255" y="700" class="label">Materials</text>
+  <circle cx="1270" cy="732" r="7" class="steel"/>
+  <text x="1290" y="738" class="note">matte steel (candle holders / stands)</text>
+  <circle cx="1270" cy="760" r="7" fill="#fffdf8" stroke="#bfb8aa" stroke-width="1.2"/>
+  <text x="1290" y="766" class="note">ivory linen / cotton paper</text>
+  <circle cx="1270" cy="788" r="7" fill="#ded8cd" stroke="#a8a196" stroke-width="1.2"/>
+  <text x="1290" y="794" class="note">glass (clear / smoked)</text>
+</svg>
