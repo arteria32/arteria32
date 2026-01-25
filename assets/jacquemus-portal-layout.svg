@@ -1,0 +1,204 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <style>
+      .bg { fill:#f7f2e9; }
+      .panel { fill:#fffdf8; stroke:#cbbfae; stroke-width:3; }
+      .title { fill:#1f1f1f; font-family: Inter, Arial, sans-serif; font-size:34px; font-weight:600; }
+      .note { fill:#4a4a4a; font-family: Inter, Arial, sans-serif; font-size:16px; }
+      .label { fill:#2a2a2a; font-family: Inter, Arial, sans-serif; font-size:18px; font-weight:600; }
+      .muted { fill:#5a5a5a; font-family: Inter, Arial, sans-serif; font-size:14px; }
+      .chair { fill:#2e2e2e; opacity:0.86; }
+      .table { fill:#fffdf8; stroke:#cbbfae; stroke-width:3; }
+      .accent { fill:#f1d34c; }
+      .steel { fill:#1f1f1f; }
+      .stem { stroke:#2f2f2f; stroke-width:2.2; stroke-linecap:round; }
+      .calla { fill:#fff8ea; stroke:#cbbfae; stroke-width:1.2; }
+      .flower { fill:#f1d34c; stroke:#c6a93b; stroke-width:1.2; }
+      .candle { fill:#efe3cf; stroke:#cbbfae; stroke-width:1.2; }
+      .dash { stroke:#d2c7b6; stroke-width:3; stroke-dasharray:8 10; }
+    </style>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="900" class="bg"/>
+
+  <text x="60" y="88" class="title">Jacquemus minimal - hero floral ceiling (floor portal, no ceiling touch)</text>
+  <text x="60" y="124" class="note">3m long table. Key move: one sculptural portal above table + floating floral clusters (butter yellow + ivory).</text>
+
+  <!-- Room boundary -->
+  <rect x="40" y="160" width="1520" height="700" rx="18" fill="none" stroke="#d8cfbf" stroke-width="3"/>
+  <text x="60" y="198" class="muted">Diagram (not to scale): portal + table rhythm + hero zones</text>
+
+  <!-- 3m table (schematic) -->
+  <rect x="220" y="360" width="1160" height="220" rx="14" class="table" filter="url(#shadow)"/>
+  <text x="780" y="344" class="label">3m long banquet table (approx.)</text>
+
+  <!-- Chairs -->
+  <g class="chair">
+    <!-- 15 chairs top -->
+    <g>
+      <rect x="250" y="315" width="48" height="34" rx="7"/>
+      <rect x="325" y="315" width="48" height="34" rx="7"/>
+      <rect x="400" y="315" width="48" height="34" rx="7"/>
+      <rect x="475" y="315" width="48" height="34" rx="7"/>
+      <rect x="550" y="315" width="48" height="34" rx="7"/>
+      <rect x="625" y="315" width="48" height="34" rx="7"/>
+      <rect x="700" y="315" width="48" height="34" rx="7"/>
+      <rect x="775" y="315" width="48" height="34" rx="7"/>
+      <rect x="850" y="315" width="48" height="34" rx="7"/>
+      <rect x="925" y="315" width="48" height="34" rx="7"/>
+      <rect x="1000" y="315" width="48" height="34" rx="7"/>
+      <rect x="1075" y="315" width="48" height="34" rx="7"/>
+      <rect x="1150" y="315" width="48" height="34" rx="7"/>
+      <rect x="1225" y="315" width="48" height="34" rx="7"/>
+      <rect x="1300" y="315" width="48" height="34" rx="7"/>
+    </g>
+    <!-- 15 chairs bottom -->
+    <g>
+      <rect x="250" y="592" width="48" height="34" rx="7"/>
+      <rect x="325" y="592" width="48" height="34" rx="7"/>
+      <rect x="400" y="592" width="48" height="34" rx="7"/>
+      <rect x="475" y="592" width="48" height="34" rx="7"/>
+      <rect x="550" y="592" width="48" height="34" rx="7"/>
+      <rect x="625" y="592" width="48" height="34" rx="7"/>
+      <rect x="700" y="592" width="48" height="34" rx="7"/>
+      <rect x="775" y="592" width="48" height="34" rx="7"/>
+      <rect x="850" y="592" width="48" height="34" rx="7"/>
+      <rect x="925" y="592" width="48" height="34" rx="7"/>
+      <rect x="1000" y="592" width="48" height="34" rx="7"/>
+      <rect x="1075" y="592" width="48" height="34" rx="7"/>
+      <rect x="1150" y="592" width="48" height="34" rx="7"/>
+      <rect x="1225" y="592" width="48" height="34" rx="7"/>
+      <rect x="1300" y="592" width="48" height="34" rx="7"/>
+    </g>
+  </g>
+
+  <!-- Portal frames (floor-based, 2 legs + top beam) -->
+  <g filter="url(#shadow)">
+    <!-- left leg -->
+    <rect x="300" y="250" width="28" height="440" rx="10" class="steel"/>
+    <!-- right leg -->
+    <rect x="1272" y="250" width="28" height="440" rx="10" class="steel"/>
+    <!-- top beam -->
+    <rect x="300" y="250" width="1000" height="28" rx="10" class="steel"/>
+    <!-- bases -->
+    <rect x="250" y="690" width="130" height="28" rx="8" class="steel" opacity="0.9"/>
+    <rect x="1222" y="690" width="130" height="28" rx="8" class="steel" opacity="0.9"/>
+  </g>
+  <text x="520" y="240" class="note">Floor portal (black steel), safe bases, no ceiling fixing</text>
+
+  <!-- Floating floral clusters under top beam -->
+  <g>
+    <!-- suspension lines -->
+    <g stroke="#7a7a7a" stroke-width="1.2" opacity="0.5">
+      <line x1="420" y1="278" x2="420" y2="330"/>
+      <line x1="560" y1="278" x2="560" y2="346"/>
+      <line x1="700" y1="278" x2="700" y2="334"/>
+      <line x1="840" y1="278" x2="840" y2="352"/>
+      <line x1="980" y1="278" x2="980" y2="336"/>
+      <line x1="1120" y1="278" x2="1120" y2="350"/>
+    </g>
+    <!-- clusters -->
+    <g>
+      <ellipse cx="420" cy="340" rx="55" ry="34" class="flower"/>
+      <ellipse cx="560" cy="356" rx="70" ry="40" class="flower"/>
+      <ellipse cx="700" cy="344" rx="60" ry="36" class="flower"/>
+      <ellipse cx="840" cy="362" rx="78" ry="44" class="flower"/>
+      <ellipse cx="980" cy="346" rx="62" ry="36" class="flower"/>
+      <ellipse cx="1120" cy="360" rx="74" ry="42" class="flower"/>
+      <!-- ivory highlights -->
+      <ellipse cx="404" cy="338" rx="18" ry="12" class="calla"/>
+      <ellipse cx="542" cy="352" rx="22" ry="14" class="calla"/>
+      <ellipse cx="684" cy="342" rx="20" ry="13" class="calla"/>
+      <ellipse cx="822" cy="358" rx="24" ry="15" class="calla"/>
+      <ellipse cx="964" cy="344" rx="20" ry="13" class="calla"/>
+      <ellipse cx="1102" cy="356" rx="24" ry="15" class="calla"/>
+    </g>
+  </g>
+
+  <!-- Table centerline rhythm -->
+  <line x1="280" y1="470" x2="1320" y2="470" class="dash"/>
+  <text x="640" y="498" class="note">Table rhythm: low line of bud vases + many identical slim candles</text>
+
+  <!-- Minimal bud vases + candles (schematic) -->
+  <g>
+    <g>
+      <!-- vases -->
+      <g fill="#e7dfd0" stroke="#b9ad9a" stroke-width="1.4">
+        <rect x="320" y="440" width="18" height="52" rx="6"/>
+        <rect x="400" y="440" width="18" height="52" rx="6"/>
+        <rect x="480" y="440" width="18" height="52" rx="6"/>
+        <rect x="560" y="440" width="18" height="52" rx="6"/>
+        <rect x="640" y="440" width="18" height="52" rx="6"/>
+        <rect x="720" y="440" width="18" height="52" rx="6"/>
+        <rect x="800" y="440" width="18" height="52" rx="6"/>
+        <rect x="880" y="440" width="18" height="52" rx="6"/>
+        <rect x="960" y="440" width="18" height="52" rx="6"/>
+        <rect x="1040" y="440" width="18" height="52" rx="6"/>
+        <rect x="1120" y="440" width="18" height="52" rx="6"/>
+        <rect x="1200" y="440" width="18" height="52" rx="6"/>
+      </g>
+      <!-- stems and tiny calla heads -->
+      <g class="stem">
+        <line x1="329" y1="438" x2="329" y2="410"/>
+        <line x1="409" y1="438" x2="409" y2="406"/>
+        <line x1="489" y1="438" x2="489" y2="412"/>
+        <line x1="569" y1="438" x2="569" y2="404"/>
+        <line x1="649" y1="438" x2="649" y2="412"/>
+        <line x1="729" y1="438" x2="729" y2="406"/>
+        <line x1="809" y1="438" x2="809" y2="412"/>
+        <line x1="889" y1="438" x2="889" y2="406"/>
+        <line x1="969" y1="438" x2="969" y2="412"/>
+        <line x1="1049" y1="438" x2="1049" y2="406"/>
+        <line x1="1129" y1="438" x2="1129" y2="412"/>
+        <line x1="1209" y1="438" x2="1209" y2="406"/>
+      </g>
+      <g class="calla">
+        <ellipse cx="329" cy="404" rx="10" ry="7"/>
+        <ellipse cx="409" cy="400" rx="10" ry="7"/>
+        <ellipse cx="489" cy="406" rx="10" ry="7"/>
+        <ellipse cx="569" cy="398" rx="10" ry="7"/>
+        <ellipse cx="649" cy="406" rx="10" ry="7"/>
+        <ellipse cx="729" cy="400" rx="10" ry="7"/>
+        <ellipse cx="809" cy="406" rx="10" ry="7"/>
+        <ellipse cx="889" cy="400" rx="10" ry="7"/>
+        <ellipse cx="969" cy="406" rx="10" ry="7"/>
+        <ellipse cx="1049" cy="400" rx="10" ry="7"/>
+        <ellipse cx="1129" cy="406" rx="10" ry="7"/>
+        <ellipse cx="1209" cy="400" rx="10" ry="7"/>
+      </g>
+      <!-- candles -->
+      <g class="candle">
+        <circle cx="360" cy="470" r="6"/>
+        <circle cx="440" cy="470" r="6"/>
+        <circle cx="520" cy="470" r="6"/>
+        <circle cx="600" cy="470" r="6"/>
+        <circle cx="680" cy="470" r="6"/>
+        <circle cx="760" cy="470" r="6"/>
+        <circle cx="840" cy="470" r="6"/>
+        <circle cx="920" cy="470" r="6"/>
+        <circle cx="1000" cy="470" r="6"/>
+        <circle cx="1080" cy="470" r="6"/>
+        <circle cx="1160" cy="470" r="6"/>
+        <circle cx="1240" cy="470" r="6"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Welcome / seating -->
+  <rect x="70" y="650" width="320" height="170" rx="12" class="panel" filter="url(#shadow)"/>
+  <rect x="92" y="676" width="45" height="10" rx="5" class="accent"/>
+  <text x="95" y="720" class="label">WELCOME / SEATING</text>
+  <text x="95" y="752" class="note">Warm ivory board + butter-yellow accent bar</text>
+  <text x="95" y="778" class="note">One typeface, lots of whitespace</text>
+  <text x="95" y="804" class="note">Optional: 1 tall ceramic vase nearby</text>
+
+  <!-- Hero floor plinths -->
+  <rect x="1210" y="650" width="340" height="170" rx="12" class="panel" filter="url(#shadow)"/>
+  <text x="1235" y="720" class="label">Extra Jacquemus move</text>
+  <text x="1235" y="752" class="note">2 floor plinths (ivory) + oversized ceramic vases</text>
+  <text x="1235" y="778" class="note">Place near entrance or photo corner (no arch)</text>
+  <text x="1235" y="804" class="note">Keep table minimal so ceiling reads as hero</text>
+</svg>

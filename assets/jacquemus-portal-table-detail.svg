@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs>
+    <style>
+      .bg { fill:#f7f2e9; }
+      .title { fill:#1f1f1f; font-family: Inter, Arial, sans-serif; font-size:34px; font-weight:600; }
+      .note { fill:#4a4a4a; font-family: Inter, Arial, sans-serif; font-size:16px; }
+      .label { fill:#2a2a2a; font-family: Inter, Arial, sans-serif; font-size:18px; font-weight:600; }
+      .panel { fill:#fffdf8; stroke:#cbbfae; stroke-width:3; }
+      .steel { fill:#1f1f1f; }
+      .accent { fill:#f1d34c; }
+      .dash { stroke:#d2c7b6; stroke-width:3; stroke-dasharray:8 10; }
+      .vase { fill:#e7dfd0; stroke:#b9ad9a; stroke-width:1.6; }
+      .stem { stroke:#2f2f2f; stroke-width:2.4; stroke-linecap:round; }
+      .calla { fill:#fff8ea; stroke:#cbbfae; stroke-width:1.2; }
+      .candle { fill:#efe3cf; stroke:#cbbfae; stroke-width:1.2; }
+      .flower { fill:#f1d34c; stroke:#c6a93b; stroke-width:1.2; }
+    </style>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="900" class="bg"/>
+
+  <text x="60" y="88" class="title">Jacquemus minimal - 3m table detail (portal + ceiling florals)</text>
+  <text x="60" y="124" class="note">Keep the tabletop low and rhythmic. Let the overhead installation be the hero.</text>
+
+  <!-- Portal (cropped close-up) -->
+  <g filter="url(#shadow)">
+    <rect x="120" y="170" width="24" height="260" rx="10" class="steel"/>
+    <rect x="1256" y="170" width="24" height="260" rx="10" class="steel"/>
+    <rect x="120" y="170" width="1160" height="24" rx="10" class="steel"/>
+  </g>
+  <text x="200" y="160" class="label">Floor portal (black steel): top beam above table</text>
+
+  <!-- Floating clusters -->
+  <g>
+    <g stroke="#7a7a7a" stroke-width="1.2" opacity="0.5">
+      <line x1="260" y1="194" x2="260" y2="250"/>
+      <line x1="420" y1="194" x2="420" y2="270"/>
+      <line x1="580" y1="194" x2="580" y2="255"/>
+      <line x1="740" y1="194" x2="740" y2="278"/>
+      <line x1="900" y1="194" x2="900" y2="258"/>
+      <line x1="1060" y1="194" x2="1060" y2="274"/>
+    </g>
+    <g>
+      <ellipse cx="260" cy="262" rx="55" ry="34" class="flower"/>
+      <ellipse cx="420" cy="280" rx="72" ry="42" class="flower"/>
+      <ellipse cx="580" cy="268" rx="60" ry="36" class="flower"/>
+      <ellipse cx="740" cy="288" rx="80" ry="46" class="flower"/>
+      <ellipse cx="900" cy="272" rx="62" ry="36" class="flower"/>
+      <ellipse cx="1060" cy="286" rx="76" ry="44" class="flower"/>
+      <ellipse cx="242" cy="258" rx="18" ry="12" class="calla"/>
+      <ellipse cx="402" cy="276" rx="22" ry="14" class="calla"/>
+      <ellipse cx="562" cy="265" rx="20" ry="13" class="calla"/>
+      <ellipse cx="722" cy="284" rx="24" ry="15" class="calla"/>
+      <ellipse cx="882" cy="269" rx="20" ry="13" class="calla"/>
+      <ellipse cx="1042" cy="282" rx="24" ry="15" class="calla"/>
+    </g>
+  </g>
+
+  <!-- Table -->
+  <rect x="80" y="360" width="1240" height="410" rx="18" class="panel" filter="url(#shadow)"/>
+  <rect x="110" y="390" width="70" height="12" rx="6" class="accent"/>
+  <text x="190" y="402" class="label">Ivory linen + butter-yellow accent (only once)</text>
+
+  <line x1="130" y1="560" x2="1270" y2="560" class="dash"/>
+  <text x="130" y="592" class="note">Center rhythm: identical bud vases + identical slim candles (keep everything low)</text>
+
+  <!-- Bud vases line (12) -->
+  <g>
+    <g class="vase">
+      <rect x="170" y="530" width="22" height="72" rx="8"/>
+      <rect x="260" y="530" width="22" height="72" rx="8"/>
+      <rect x="350" y="530" width="22" height="72" rx="8"/>
+      <rect x="440" y="530" width="22" height="72" rx="8"/>
+      <rect x="530" y="530" width="22" height="72" rx="8"/>
+      <rect x="620" y="530" width="22" height="72" rx="8"/>
+      <rect x="710" y="530" width="22" height="72" rx="8"/>
+      <rect x="800" y="530" width="22" height="72" rx="8"/>
+      <rect x="890" y="530" width="22" height="72" rx="8"/>
+      <rect x="980" y="530" width="22" height="72" rx="8"/>
+      <rect x="1070" y="530" width="22" height="72" rx="8"/>
+      <rect x="1160" y="530" width="22" height="72" rx="8"/>
+    </g>
+    <g class="stem">
+      <line x1="181" y1="528" x2="181" y2="490"/>
+      <line x1="271" y1="528" x2="271" y2="484"/>
+      <line x1="361" y1="528" x2="361" y2="492"/>
+      <line x1="451" y1="528" x2="451" y2="482"/>
+      <line x1="541" y1="528" x2="541" y2="492"/>
+      <line x1="631" y1="528" x2="631" y2="486"/>
+      <line x1="721" y1="528" x2="721" y2="491"/>
+      <line x1="811" y1="528" x2="811" y2="484"/>
+      <line x1="901" y1="528" x2="901" y2="492"/>
+      <line x1="991" y1="528" x2="991" y2="486"/>
+      <line x1="1081" y1="528" x2="1081" y2="492"/>
+      <line x1="1171" y1="528" x2="1171" y2="486"/>
+    </g>
+    <g class="calla">
+      <ellipse cx="181" cy="482" rx="12" ry="8"/>
+      <ellipse cx="271" cy="476" rx="12" ry="8"/>
+      <ellipse cx="361" cy="484" rx="12" ry="8"/>
+      <ellipse cx="451" cy="474" rx="12" ry="8"/>
+      <ellipse cx="541" cy="484" rx="12" ry="8"/>
+      <ellipse cx="631" cy="478" rx="12" ry="8"/>
+      <ellipse cx="721" cy="483" rx="12" ry="8"/>
+      <ellipse cx="811" cy="476" rx="12" ry="8"/>
+      <ellipse cx="901" cy="484" rx="12" ry="8"/>
+      <ellipse cx="991" cy="478" rx="12" ry="8"/>
+      <ellipse cx="1081" cy="484" rx="12" ry="8"/>
+      <ellipse cx="1171" cy="478" rx="12" ry="8"/>
+    </g>
+  </g>
+
+  <!-- Candles (between vases) -->
+  <g class="candle">
+    <circle cx="215" cy="560" r="7"/>
+    <circle cx="305" cy="560" r="7"/>
+    <circle cx="395" cy="560" r="7"/>
+    <circle cx="485" cy="560" r="7"/>
+    <circle cx="575" cy="560" r="7"/>
+    <circle cx="665" cy="560" r="7"/>
+    <circle cx="755" cy="560" r="7"/>
+    <circle cx="845" cy="560" r="7"/>
+    <circle cx="935" cy="560" r="7"/>
+    <circle cx="1025" cy="560" r="7"/>
+    <circle cx="1115" cy="560" r="7"/>
+    <circle cx="1205" cy="560" r="7"/>
+  </g>
+
+  <!-- Place card -->
+  <rect x="120" y="670" width="250" height="78" rx="12" fill="#fffdf8" stroke="#cbbfae" stroke-width="2"/>
+  <text x="145" y="716" font-family="Inter, Arial, sans-serif" font-size="18" fill="#1f1f1f">NAME SURNAME</text>
+  <text x="145" y="740" font-family="Inter, Arial, sans-serif" font-size="12" fill="#5a5a5a">one typeface, lots of whitespace</text>
+</svg>
